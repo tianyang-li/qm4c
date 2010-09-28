@@ -1,0 +1,22 @@
+Added Component: Designator=BT?(BAT-2)
+Added Component: Designator=C1(RAD-0.3)
+Added Component: Designator=C?(RB7.6-15)
+Added Component: Designator=D1(DSO-C2/X3.3)
+Added Component: Designator=P1(HDR1X2)
+Added Pin To Net: NetName=NetBT?_1 Pin=BT?-1
+Added Pin To Net: NetName=NetBT?_1 Pin=C?-2
+Added Net: Name=NetBT?_1
+Added Pin To Net: NetName=NetBT?_2 Pin=BT?-2
+Added Pin To Net: NetName=NetBT?_2 Pin=C?-1
+Added Net: Name=NetBT?_2
+Added Pin To Net: NetName=NetC1_1 Pin=C1-1
+Added Pin To Net: NetName=NetC1_1 Pin=D1-1
+Added Net: Name=NetC1_1
+Added Pin To Net: NetName=NetC1_2 Pin=C1-2
+Added Pin To Net: NetName=NetC1_2 Pin=P1-1
+Added Net: Name=NetC1_2
+Added Pin To Net: NetName=NetD1_2 Pin=D1-2
+Added Pin To Net: NetName=NetD1_2 Pin=P1-2
+Added Net: Name=NetD1_2
+Added Class: Name=Sheet1
+Added Room: Name=Sheet1
