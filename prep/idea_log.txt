@@ -1,0 +1,7 @@
+how does a mouse work? use this to  position the tank
+
+chips for consideration
+h8/3297
+ÐÍºÅ£º HD6473297P16 
+
+avr32 (i think this one's better than the previous one)
