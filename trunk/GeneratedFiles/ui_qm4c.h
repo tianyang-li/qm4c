@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'qm4c.ui'
 **
-** Created: Tue Sep 28 23:47:22 2010
+** Created: Thu Sep 30 18:26:38 2010
 **      by: Qt User Interface Compiler version 4.6.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -33,17 +33,15 @@ QT_BEGIN_NAMESPACE
 class Ui_QM4CClass
 {
 public:
-    QAction *actionQM4C_Help;
-    QAction *actionQM4C_Help_2;
     QAction *actionAbout_QM4C;
-    QAction *actionQM4C_Help_3;
+    QAction *actionQM4C_Help;
     QWidget *centralWidget;
     QGridLayout *gridLayout;
-    QLabel *label;
-    QPlainTextEdit *plainTextEdit;
-    QPushButton *pushButton;
+    QPlainTextEdit *boolExpInput;
+    QPushButton *simplifyButton;
     QLabel *label_2;
-    QTextBrowser *textBrowser;
+    QTextBrowser *boolExpOutput;
+    QLabel *label;
     QMenuBar *menuBar;
     QMenu *menuHelp;
     QToolBar *mainToolBar;
@@ -54,46 +52,48 @@ public:
         if (QM4CClass->objectName().isEmpty())
             QM4CClass->setObjectName(QString::fromUtf8("QM4CClass"));
         QM4CClass->resize(720, 563);
-        actionQM4C_Help = new QAction(QM4CClass);
-        actionQM4C_Help->setObjectName(QString::fromUtf8("actionQM4C_Help"));
-        actionQM4C_Help_2 = new QAction(QM4CClass);
-        actionQM4C_Help_2->setObjectName(QString::fromUtf8("actionQM4C_Help_2"));
         actionAbout_QM4C = new QAction(QM4CClass);
         actionAbout_QM4C->setObjectName(QString::fromUtf8("actionAbout_QM4C"));
-        actionQM4C_Help_3 = new QAction(QM4CClass);
-        actionQM4C_Help_3->setObjectName(QString::fromUtf8("actionQM4C_Help_3"));
+        actionQM4C_Help = new QAction(QM4CClass);
+        actionQM4C_Help->setObjectName(QString::fromUtf8("actionQM4C_Help"));
         centralWidget = new QWidget(QM4CClass);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         gridLayout = new QGridLayout(centralWidget);
         gridLayout->setSpacing(6);
         gridLayout->setContentsMargins(11, 11, 11, 11);
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
-        label = new QLabel(centralWidget);
-        label->setObjectName(QString::fromUtf8("label"));
-        label->setMinimumSize(QSize(91, 16));
-        label->setLocale(QLocale(QLocale::English, QLocale::UnitedStates));
+        boolExpInput = new QPlainTextEdit(centralWidget);
+        boolExpInput->setObjectName(QString::fromUtf8("boolExpInput"));
+        QFont font;
+        font.setFamily(QString::fromUtf8("Times New Roman"));
+        boolExpInput->setFont(font);
+        boolExpInput->setLocale(QLocale(QLocale::English, QLocale::UnitedStates));
 
-        gridLayout->addWidget(label, 0, 0, 1, 1);
+        gridLayout->addWidget(boolExpInput, 0, 1, 1, 1);
 
-        plainTextEdit = new QPlainTextEdit(centralWidget);
-        plainTextEdit->setObjectName(QString::fromUtf8("plainTextEdit"));
+        simplifyButton = new QPushButton(centralWidget);
+        simplifyButton->setObjectName(QString::fromUtf8("simplifyButton"));
 
-        gridLayout->addWidget(plainTextEdit, 0, 1, 1, 1);
-
-        pushButton = new QPushButton(centralWidget);
-        pushButton->setObjectName(QString::fromUtf8("pushButton"));
-
-        gridLayout->addWidget(pushButton, 1, 0, 1, 1);
+        gridLayout->addWidget(simplifyButton, 1, 0, 1, 1);
 
         label_2 = new QLabel(centralWidget);
         label_2->setObjectName(QString::fromUtf8("label_2"));
 
         gridLayout->addWidget(label_2, 2, 0, 1, 1);
 
-        textBrowser = new QTextBrowser(centralWidget);
-        textBrowser->setObjectName(QString::fromUtf8("textBrowser"));
+        boolExpOutput = new QTextBrowser(centralWidget);
+        boolExpOutput->setObjectName(QString::fromUtf8("boolExpOutput"));
+        boolExpOutput->setFont(font);
+        boolExpOutput->setLocale(QLocale(QLocale::English, QLocale::UnitedStates));
 
-        gridLayout->addWidget(textBrowser, 2, 1, 1, 1);
+        gridLayout->addWidget(boolExpOutput, 2, 1, 1, 1);
+
+        label = new QLabel(centralWidget);
+        label->setObjectName(QString::fromUtf8("label"));
+        label->setMinimumSize(QSize(91, 16));
+        label->setLocale(QLocale(QLocale::English, QLocale::UnitedStates));
+
+        gridLayout->addWidget(label, 0, 0, 1, 1);
 
         QM4CClass->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(QM4CClass);
@@ -110,9 +110,9 @@ public:
         QM4CClass->setStatusBar(statusBar);
 
         menuBar->addAction(menuHelp->menuAction());
-        menuHelp->addAction(actionAbout_QM4C);
+        menuHelp->addAction(actionQM4C_Help);
         menuHelp->addSeparator();
-        menuHelp->addAction(actionQM4C_Help_3);
+        menuHelp->addAction(actionAbout_QM4C);
 
         retranslateUi(QM4CClass);
 
@@ -122,17 +122,15 @@ public:
     void retranslateUi(QMainWindow *QM4CClass)
     {
         QM4CClass->setWindowTitle(QApplication::translate("QM4CClass", "QM4C", 0, QApplication::UnicodeUTF8));
-        actionQM4C_Help->setText(QApplication::translate("QM4CClass", "QM4C Help", 0, QApplication::UnicodeUTF8));
-        actionQM4C_Help_2->setText(QApplication::translate("QM4CClass", "QM4C Help", 0, QApplication::UnicodeUTF8));
         actionAbout_QM4C->setText(QApplication::translate("QM4CClass", "About QM4C", 0, QApplication::UnicodeUTF8));
-        actionQM4C_Help_3->setText(QApplication::translate("QM4CClass", "QM4C Help", 0, QApplication::UnicodeUTF8));
-        label->setText(QApplication::translate("QM4CClass", "Enter boolean\n"
-"expression to\n"
-"simplify", 0, QApplication::UnicodeUTF8));
-        pushButton->setText(QApplication::translate("QM4CClass", "Simplify", 0, QApplication::UnicodeUTF8));
+        actionQM4C_Help->setText(QApplication::translate("QM4CClass", "QM4C Help", 0, QApplication::UnicodeUTF8));
+        simplifyButton->setText(QApplication::translate("QM4CClass", "Simplify", 0, QApplication::UnicodeUTF8));
         label_2->setText(QApplication::translate("QM4CClass", "Simplified\n"
 "boolean\n"
 "expresion", 0, QApplication::UnicodeUTF8));
+        label->setText(QApplication::translate("QM4CClass", "Enter boolean\n"
+"expression to\n"
+"simplify", 0, QApplication::UnicodeUTF8));
         menuHelp->setTitle(QApplication::translate("QM4CClass", "Help", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
