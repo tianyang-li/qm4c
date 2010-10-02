@@ -1,4 +1,4 @@
-#summary One-sentence summary of this page.
+#summary QM4C How-to
 
 = Introduction =
 
@@ -16,4 +16,3 @@ For example, the output of
 would be
 
 1
-
