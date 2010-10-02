@@ -35,6 +35,11 @@ public:
 private:
 	Ui::QM4CClass ui;
 
+	void setupActions();  // setup actions in menu, Help, About, etc.
+
+private slots:
+	void AboutQM4COpen();
+	void QM4CHelpOpen();
 };
 
 #endif // QM4C_H

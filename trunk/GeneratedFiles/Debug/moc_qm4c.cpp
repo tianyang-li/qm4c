@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'qm4c.h'
 **
-** Created: Thu Sep 30 18:26:42 2010
+** Created: Sat Oct 2 14:15:44 2010
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.6.3)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,18 +23,22 @@ static const uint qt_meta_data_QM4C[] = {
        4,       // revision
        0,       // classname
        0,    0, // classinfo
-       0,    0, // methods
+       2,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
        0,       // signalCount
 
+ // slots: signature, parameters, type, tag, flags
+       6,    5,    5,    5, 0x08,
+      22,    5,    5,    5, 0x08,
+
        0        // eod
 };
 
 static const char qt_meta_stringdata_QM4C[] = {
-    "QM4C\0"
+    "QM4C\0\0AboutQM4COpen()\0QM4CHelpOpen()\0"
 };
 
 const QMetaObject QM4C::staticMetaObject = {
@@ -64,6 +68,14 @@ int QM4C::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     _id = QMainWindow::qt_metacall(_c, _id, _a);
     if (_id < 0)
         return _id;
+    if (_c == QMetaObject::InvokeMetaMethod) {
+        switch (_id) {
+        case 0: AboutQM4COpen(); break;
+        case 1: QM4CHelpOpen(); break;
+        default: ;
+        }
+        _id -= 2;
+    }
     return _id;
 }
 QT_END_MOC_NAMESPACE

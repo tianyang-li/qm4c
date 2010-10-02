@@ -16,7 +16,7 @@
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="1">
-     <widget class="QPlainTextEdit" name="boolExpInput">
+     <widget class="QPlainTextEdit" name="boolExprInput">
       <property name="font">
        <font>
         <family>Times New Roman</family>
@@ -25,12 +25,27 @@
       <property name="locale">
        <locale language="English" country="UnitedStates"/>
       </property>
+      <property name="tabChangesFocus">
+       <bool>true</bool>
+      </property>
+      <property name="lineWrapMode">
+       <enum>QPlainTextEdit::WidgetWidth</enum>
+      </property>
      </widget>
     </item>
     <item row="1" column="0">
      <widget class="QPushButton" name="simplifyButton">
+      <property name="locale">
+       <locale language="English" country="UnitedStates"/>
+      </property>
       <property name="text">
        <string>Simplify</string>
+      </property>
+      <property name="autoDefault">
+       <bool>false</bool>
+      </property>
+      <property name="default">
+       <bool>true</bool>
       </property>
      </widget>
     </item>
@@ -44,7 +59,7 @@ expresion</string>
      </widget>
     </item>
     <item row="2" column="1">
-     <widget class="QTextBrowser" name="boolExpOutput">
+     <widget class="QTextBrowser" name="boolExprOutput">
       <property name="font">
        <font>
         <family>Times New Roman</family>
