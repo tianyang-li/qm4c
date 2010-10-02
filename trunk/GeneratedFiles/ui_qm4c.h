@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'qm4c.ui'
 **
-** Created: Sat Oct 2 14:20:24 2010
+** Created: Sun Oct 3 01:34:44 2010
 **      by: Qt User Interface Compiler version 4.6.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -24,7 +24,6 @@
 #include <QtGui/QPlainTextEdit>
 #include <QtGui/QPushButton>
 #include <QtGui/QStatusBar>
-#include <QtGui/QTextBrowser>
 #include <QtGui/QToolBar>
 #include <QtGui/QWidget>
 
@@ -40,8 +39,8 @@ public:
     QPlainTextEdit *boolExprInput;
     QPushButton *simplifyButton;
     QLabel *label_2;
-    QTextBrowser *boolExprOutput;
     QLabel *label;
+    QPlainTextEdit *boolExprOutput;
     QMenuBar *menuBar;
     QMenu *menuHelp;
     QToolBar *mainToolBar;
@@ -65,7 +64,8 @@ public:
         boolExprInput = new QPlainTextEdit(centralWidget);
         boolExprInput->setObjectName(QString::fromUtf8("boolExprInput"));
         QFont font;
-        font.setFamily(QString::fromUtf8("Times New Roman"));
+        font.setFamily(QString::fromUtf8("Courier"));
+        font.setPointSize(12);
         boolExprInput->setFont(font);
         boolExprInput->setLocale(QLocale(QLocale::English, QLocale::UnitedStates));
         boolExprInput->setTabChangesFocus(true);
@@ -86,19 +86,20 @@ public:
 
         gridLayout->addWidget(label_2, 2, 0, 1, 1);
 
-        boolExprOutput = new QTextBrowser(centralWidget);
-        boolExprOutput->setObjectName(QString::fromUtf8("boolExprOutput"));
-        boolExprOutput->setFont(font);
-        boolExprOutput->setLocale(QLocale(QLocale::English, QLocale::UnitedStates));
-
-        gridLayout->addWidget(boolExprOutput, 2, 1, 1, 1);
-
         label = new QLabel(centralWidget);
         label->setObjectName(QString::fromUtf8("label"));
         label->setMinimumSize(QSize(91, 16));
         label->setLocale(QLocale(QLocale::English, QLocale::UnitedStates));
 
         gridLayout->addWidget(label, 0, 0, 1, 1);
+
+        boolExprOutput = new QPlainTextEdit(centralWidget);
+        boolExprOutput->setObjectName(QString::fromUtf8("boolExprOutput"));
+        boolExprOutput->setFont(font);
+        boolExprOutput->setLocale(QLocale(QLocale::English, QLocale::UnitedStates));
+        boolExprOutput->setReadOnly(true);
+
+        gridLayout->addWidget(boolExprOutput, 2, 1, 1, 1);
 
         QM4CClass->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(QM4CClass);

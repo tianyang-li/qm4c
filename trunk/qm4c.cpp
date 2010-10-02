@@ -19,15 +19,21 @@
  */
 
 #include <QtGui/QDialog>
+#include <QString>
 
 #include "qm4c.h"
 #include "ui_about_QM4C_dlg.h"
 #include "ui_QM4C_help_dlg.h"
+#include "ui_please_wait_dlg.h"
+#include "ui_input_error_dlg.h"
+
+#include "simplify_bool_expr.h"
 
 QM4C::QM4C(QWidget *parent, Qt::WFlags flags)
 	: QMainWindow(parent, flags)
 {
 	ui.setupUi(this);
+	connect(ui.simplifyButton, SIGNAL(clicked()), this, SLOT(SimplifyExpr()));
 	setupActions();
 }
 
@@ -53,5 +59,30 @@ void QM4C::QM4CHelpOpen() {
 	QDialog help_dlg;
 	help_dlg_ui.setupUi(&help_dlg);
 	help_dlg.exec();
+}
+
+void QM4C::SimplifyExpr() {
+
+	input_expr_ = (ui.boolExprInput->toPlainText()).toStdString();
+
+	Ui::PleaseWaitDlg please_wait_dlg_ui;
+	QDialog please_wait;
+	please_wait_dlg_ui.setupUi(&please_wait);
+	please_wait.show();
+
+	// TODO: add simplification here
+
+	please_wait.close();
+
+	if (!SimplifyBoolExpr::MakeSimple(input_expr_, output_expr_)) {
+		QDialog error_dlg;
+		Ui::InputErrorDlg error_dlg_ui;
+		error_dlg_ui.setupUi(&error_dlg);
+		error_dlg.exec();
+		return;
+	}
+
+	ui.boolExprOutput->setPlainText(QString::fromStdString(output_expr_));
+
 }
 

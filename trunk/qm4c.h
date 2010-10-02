@@ -21,6 +21,8 @@
 #ifndef QM4C_H
 #define QM4C_H
 
+#include <string>
+
 #include <QtGui/QMainWindow>
 #include "ui_qm4c.h"
 
@@ -37,9 +39,13 @@ private:
 
 	void setupActions();  // setup actions in menu, Help, About, etc.
 
+	std::string input_expr_;
+	std::string output_expr_;
+
 private slots:
 	void AboutQM4COpen();
 	void QM4CHelpOpen();
+	void SimplifyExpr();
 };
 
 #endif // QM4C_H
