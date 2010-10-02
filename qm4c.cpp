@@ -18,16 +18,40 @@
  * E-Mail tmy1018 gmail com
  */
 
+#include <QtGui/QDialog>
+
 #include "qm4c.h"
+#include "ui_about_QM4C_dlg.h"
+#include "ui_QM4C_help_dlg.h"
 
 QM4C::QM4C(QWidget *parent, Qt::WFlags flags)
 	: QMainWindow(parent, flags)
 {
 	ui.setupUi(this);
+	setupActions();
 }
 
 QM4C::~QM4C()
 {
 
+}
+
+void QM4C::setupActions() {
+	connect(ui.actionAbout_QM4C, SIGNAL(triggered(bool)), this, SLOT(AboutQM4COpen()));
+	connect(ui.actionQM4C_Help, SIGNAL(triggered(bool)), this, SLOT(QM4CHelpOpen()));
+}
+
+void QM4C::AboutQM4COpen() {
+	Ui::AboutQM4CDlg about_dlg_ui;
+	QDialog about_dlg;
+	about_dlg_ui.setupUi(&about_dlg);
+	about_dlg.exec();
+}
+
+void QM4C::QM4CHelpOpen() {
+	Ui::QM4CHelpDlg help_dlg_ui;
+	QDialog help_dlg;
+	help_dlg_ui.setupUi(&help_dlg);
+	help_dlg.exec();
 }
 

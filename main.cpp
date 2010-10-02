@@ -21,6 +21,8 @@
 #include "qm4c.h"
 #include <QtGui/QApplication>
 
+#include "ui_about_QM4C_dlg.h"
+
 int main(int argc, char *argv[])
 {
 	QApplication a(argc, argv);

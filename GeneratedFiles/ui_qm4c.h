@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'qm4c.ui'
 **
-** Created: Thu Sep 30 18:26:38 2010
+** Created: Sat Oct 2 14:20:24 2010
 **      by: Qt User Interface Compiler version 4.6.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -37,10 +37,10 @@ public:
     QAction *actionQM4C_Help;
     QWidget *centralWidget;
     QGridLayout *gridLayout;
-    QPlainTextEdit *boolExpInput;
+    QPlainTextEdit *boolExprInput;
     QPushButton *simplifyButton;
     QLabel *label_2;
-    QTextBrowser *boolExpOutput;
+    QTextBrowser *boolExprOutput;
     QLabel *label;
     QMenuBar *menuBar;
     QMenu *menuHelp;
@@ -62,17 +62,22 @@ public:
         gridLayout->setSpacing(6);
         gridLayout->setContentsMargins(11, 11, 11, 11);
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
-        boolExpInput = new QPlainTextEdit(centralWidget);
-        boolExpInput->setObjectName(QString::fromUtf8("boolExpInput"));
+        boolExprInput = new QPlainTextEdit(centralWidget);
+        boolExprInput->setObjectName(QString::fromUtf8("boolExprInput"));
         QFont font;
         font.setFamily(QString::fromUtf8("Times New Roman"));
-        boolExpInput->setFont(font);
-        boolExpInput->setLocale(QLocale(QLocale::English, QLocale::UnitedStates));
+        boolExprInput->setFont(font);
+        boolExprInput->setLocale(QLocale(QLocale::English, QLocale::UnitedStates));
+        boolExprInput->setTabChangesFocus(true);
+        boolExprInput->setLineWrapMode(QPlainTextEdit::WidgetWidth);
 
-        gridLayout->addWidget(boolExpInput, 0, 1, 1, 1);
+        gridLayout->addWidget(boolExprInput, 0, 1, 1, 1);
 
         simplifyButton = new QPushButton(centralWidget);
         simplifyButton->setObjectName(QString::fromUtf8("simplifyButton"));
+        simplifyButton->setLocale(QLocale(QLocale::English, QLocale::UnitedStates));
+        simplifyButton->setAutoDefault(false);
+        simplifyButton->setDefault(true);
 
         gridLayout->addWidget(simplifyButton, 1, 0, 1, 1);
 
@@ -81,12 +86,12 @@ public:
 
         gridLayout->addWidget(label_2, 2, 0, 1, 1);
 
-        boolExpOutput = new QTextBrowser(centralWidget);
-        boolExpOutput->setObjectName(QString::fromUtf8("boolExpOutput"));
-        boolExpOutput->setFont(font);
-        boolExpOutput->setLocale(QLocale(QLocale::English, QLocale::UnitedStates));
+        boolExprOutput = new QTextBrowser(centralWidget);
+        boolExprOutput->setObjectName(QString::fromUtf8("boolExprOutput"));
+        boolExprOutput->setFont(font);
+        boolExprOutput->setLocale(QLocale(QLocale::English, QLocale::UnitedStates));
 
-        gridLayout->addWidget(boolExpOutput, 2, 1, 1, 1);
+        gridLayout->addWidget(boolExprOutput, 2, 1, 1, 1);
 
         label = new QLabel(centralWidget);
         label->setObjectName(QString::fromUtf8("label"));
