@@ -19,18 +19,31 @@
  */
 
 #include "c_bool_expr_eval.h"
+#include "parse_c_bool_expr.h"
 
 void CBoolExprEval::InitEvalStruct(const std::string &expr_to_eval) {
 }
 
 bool CBoolExprEval::BinEvalNode::DoEval() {
-	bool node_val;
-	return node_val;
+	switch (this->op_type_) {
+		case OP_AND_:
+			return (left_->DoEval() && right_->DoEval());
+			break;
+		case OP_OR_:
+			return (left_->DoEval() || right_->DoEval());
+			break;
+	}
 }
 
 bool CBoolExprEval::UniEvalNode::DoEval() {
-	bool node_val;
-	return node_val;
+	switch (this->op_type_) {
+		case OP_NOT_:
+			return !input_->DoEval();
+			break;
+		case OP_NOTHING_:
+			return var_val_->find(node_expr_)->second;
+			break;
+	}
 }
 
 CBoolExprEval::BinEvalNode::BinEvalNode()
@@ -39,5 +52,6 @@ CBoolExprEval::BinEvalNode::BinEvalNode()
 }
 
 CBoolExprEval::UniEvalNode::UniEvalNode() 
-	: input_(0) {
+	: input_(0),
+	var_val_(0) {
 }

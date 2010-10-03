@@ -24,26 +24,30 @@
 #define QM4C_C_BOOL_EXPR_EVAL_H_
 
 #include <string>
+#include <map>
+#include <iostream>
 
 class CBoolExprEval {
 
 public:
 	// init the evaluation structure so it can be used
 	// more the once
-	void InitEvalStruct(std::string const &expr_to_eval); 
+	void InitEvalStruct(std::string const &expr_to_eval);
 
 private:
 	// used as nodes where evaluation can be done
 	// this serves as a base
 	class EvalNode {
-	protected:
+	public:
 		virtual bool DoEval() = 0;
+
+	protected:
 		// EvalNode operator type
 		enum OpType {OP_AND_, OP_OR_, OP_NOT_, OP_NOTHING_};
 		// OP_AND_ is for &&
 		// OP_OR_ is for ||
 		// OP_NOT_ is for ~
-		// OP_NOTHING_ is for nothing or something like ()
+		// OP_NOTHING_ is for nothing (so just get the value of the variable)
 		OpType op_type_;
 		// the boolean expression this node has to evaluate
 		std::string node_expr_;  
@@ -59,6 +63,8 @@ private:
 		bool DoEval();
 		// left and right operand
 		CBoolExprEval::EvalNode *input_;
+		// remember to point this to expr_var when needed
+		std::map<std::string, bool> const *var_val_;
 	};
 
 	// for binary operations (&& ||)
@@ -72,6 +78,9 @@ private:
 		// input into this node
 		CBoolExprEval::EvalNode *left_, *right_;
 	};
+
+	// a map that stores the value of each variable in the input expression
+	std::map<std::string, bool> expr_var_;
 
 };
 
