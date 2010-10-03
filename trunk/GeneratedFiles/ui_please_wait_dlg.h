@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'please_wait_dlg.ui'
 **
-** Created: Sun Oct 3 01:11:33 2010
+** Created: Sun Oct 3 16:07:18 2010
 **      by: Qt User Interface Compiler version 4.6.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!

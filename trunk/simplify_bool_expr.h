@@ -23,8 +23,12 @@
 
 #include <string>
 
+#include "c_bool_expr_eval.h"
+
 class SimplifyBoolExpr {
 public:
+	// returns true if input is legal and output is the simplified expression
+	// returns false if input is illegal
 	static bool MakeSimple(std::string const &input, std::string &output);
 private:
 };

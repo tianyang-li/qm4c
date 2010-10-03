@@ -75,6 +75,7 @@ void QM4C::SimplifyExpr() {
 	please_wait.close();
 
 	if (!SimplifyBoolExpr::MakeSimple(input_expr_, output_expr_)) {
+		// TODO: make errors more informative?
 		QDialog error_dlg;
 		Ui::InputErrorDlg error_dlg_ui;
 		error_dlg_ui.setupUi(&error_dlg);
