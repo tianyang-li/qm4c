@@ -163,23 +163,11 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\c_bool_expr_eval.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\main.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\parse_c_bool_expr.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\qm4c.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\qm4c_truth_table.cpp"
 				>
 			</File>
 			<File
@@ -192,14 +180,6 @@
 			Filter="h"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
-			<File
-				RelativePath=".\c_bool_expr_eval.h"
-				>
-			</File>
-			<File
-				RelativePath=".\parse_c_bool_expr.h"
-				>
-			</File>
 			<File
 				RelativePath=".\qm4c.h"
 				>
@@ -225,10 +205,6 @@
 						Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot;"
 					/>
 				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\qm4c_truth_table.h"
-				>
 			</File>
 			<File
 				RelativePath=".\simplify_bool_expr.h"

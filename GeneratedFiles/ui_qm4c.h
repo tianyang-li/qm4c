@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'qm4c.ui'
 **
-** Created: Sun Oct 3 16:07:11 2010
+** Created: Mon Oct 4 16:03:17 2010
 **      by: Qt User Interface Compiler version 4.6.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -41,6 +41,7 @@ public:
     QLabel *label_2;
     QLabel *label;
     QPlainTextEdit *boolExprOutput;
+    QLabel *label_3;
     QMenuBar *menuBar;
     QMenu *menuHelp;
     QToolBar *mainToolBar;
@@ -101,6 +102,12 @@ public:
 
         gridLayout->addWidget(boolExprOutput, 2, 1, 1, 1);
 
+        label_3 = new QLabel(centralWidget);
+        label_3->setObjectName(QString::fromUtf8("label_3"));
+        label_3->setLocale(QLocale(QLocale::English, QLocale::UnitedStates));
+
+        gridLayout->addWidget(label_3, 1, 1, 1, 1);
+
         QM4CClass->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(QM4CClass);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
@@ -137,6 +144,8 @@ public:
         label->setText(QApplication::translate("QM4CClass", "Enter boolean\n"
 "expression to\n"
 "simplify", 0, QApplication::UnicodeUTF8));
+        label_3->setText(QApplication::translate("QM4CClass", "No support for constants in the input expression currently available. \n"
+"Expressions such as \"1 || a\" and \"0 || b\" will cause errors.  ", 0, QApplication::UnicodeUTF8));
         menuHelp->setTitle(QApplication::translate("QM4CClass", "Help", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 

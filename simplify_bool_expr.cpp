@@ -21,5 +21,74 @@
 #include "simplify_bool_expr.h"
 
 bool SimplifyBoolExpr::MakeSimple(std::string const &input, std::string &output) {
+	if (!InitCheckInput(input)) {
+		return false;
+	}
+	return true;
+}
+
+bool SimplifyBoolExpr::InitCheckInput(const std::string &input) {
+	// for input_str_
+	unsigned int input_pos = 0;
+	
+	// indicates if i in the for loop (copying input into input_str_
+	// makes input[i] in a variable name string
+	bool in_var = false;
+
+	// indicates if input_str_[input_pos - 1] == '~'
+	bool prev_is_NOT = false;
+
+	// beginning and end of each variable name in input
+	std::list< std::pair<unsigned int, unsigned int> > input_var_pos;
+	for (unsigned int i = 0; i != input.length(); ++i) {
+		if (input[i] != ' ') {
+			if (prev_is_NOT) {
+				if (!IsNonNumOK(input[i])) {
+					return false;
+				}
+				prev_is_NOT = false;
+			}
+
+			input_str_[input_pos] = input[i];
+			++input_pos;
+
+			if (in_var) {
+				if (!IsCharOK(input[i])) {
+					return false;
+				}
+			}
+			else {
+				if (input[i] != '&'
+					&& input[i] != '|'
+					&& input[i] != '~') {
+						// at the beginning of a variable name
+						if (!IsNonNumOK(input[i])) {
+							return false;
+						}
+						in_var = true;
+				}
+				else {
+					switch (input[i]) {
+						case '&':
+							in_var = false;
+							break;
+						case '|':
+							in_var = false;
+							break;
+						case '~':
+							in_var = false;
+							prev_is_NOT = true;
+							break;
+						default:
+							// what is this char? error!
+							return false;
+							break;
+					}
+				}
+			}
+
+		}
+	}
+
 	return true;
 }
