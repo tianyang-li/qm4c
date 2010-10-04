@@ -28,8 +28,8 @@
 #include <iostream>
 
 class CBoolExprEval {
-
 public:
+	CBoolExprEval();
 	// init the evaluation structure so it can be used
 	// more the once
 	void InitEvalStruct(std::string const &expr_to_eval);
@@ -80,6 +80,7 @@ private:
 	};
 
 	// a map that stores the value of each variable in the input expression
+	//  ("0", false) ("1", true) are added in the constructor
 	std::map<std::string, bool> expr_var_;
 
 };

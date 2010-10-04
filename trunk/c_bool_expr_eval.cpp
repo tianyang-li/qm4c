@@ -21,6 +21,11 @@
 #include "c_bool_expr_eval.h"
 #include "parse_c_bool_expr.h"
 
+CBoolExprEval::CBoolExprEval() {
+	expr_var_["0"] = false;
+	expr_var_["1"] = true;
+}
+
 void CBoolExprEval::InitEvalStruct(const std::string &expr_to_eval) {
 }
 
