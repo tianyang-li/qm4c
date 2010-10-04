@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'qm4c.h'
 **
-** Created: Sun Oct 3 16:07:16 2010
+** Created: Mon Oct 4 15:43:43 2010
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.6.3)
 **
 ** WARNING! All changes made in this file will be lost!

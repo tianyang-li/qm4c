@@ -22,15 +22,45 @@
 #define QM4C_SIMPLIFY_BOOL_EXPR_H_
 
 #include <string>
-
-#include "c_bool_expr_eval.h"
+#include <map>
+#include <list>
+#include <cctype>
+#include <utility>
 
 class SimplifyBoolExpr {
 public:
 	// returns true if input is legal and output is the simplified expression
 	// returns false if input is illegal
-	static bool MakeSimple(std::string const &input, std::string &output);
+	bool MakeSimple(std::string const &input, std::string &output);
+
 private:
+	// checks to see if a char is an alphabet or _
+	inline bool IsNonNumOK(char c);
+	// checks to see if a char is an alphabet or num or _
+	inline bool IsCharOK(char c);
+
+	// strips spaces from input, stores results in input_str_
+	// checks for the following kind of errors
+	//		wrong varible name beginnings
+	//		wrong parenthesis
+	bool InitCheckInput(std::string const &input);
+	std::string input_str_;
+	
+	// stores varibles' strings and values
+	std::map<std::string, bool> expr_var_;
+
+	// stores the beginning and end of each variable name string
+	// in input_str_
+	std::list< std::pair<unsigned int, unsigned int> > var_pos_;
+
 };
+
+inline bool SimplifyBoolExpr::IsNonNumOK(char c) {
+	return (std::isalpha(c) || (c == '_'));
+}
+
+inline bool SimplifyBoolExpr::IsCharOK(char c) {
+	return (std::isalnum(c) || (c == '_'));
+}
 
 #endif  // QM4C_SIMPLIFY_BOOL_EXPR_H_
