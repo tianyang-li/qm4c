@@ -35,26 +35,37 @@ bool SimplifyBoolExpr::InitCheckInput(const std::string &input) {
 	// makes input[i] in a variable name string
 	bool in_var = false;
 
+	/*
 	// indicates if input_str_[input_pos - 1] == '~'
 	bool prev_is_NOT = false;
+	*/
 
-	// beginning and end of each variable name in input
-	std::list< std::pair<unsigned int, unsigned int> > input_var_pos;
 	for (unsigned int i = 0; i != input.length(); ++i) {
 		if (input[i] != ' ') {
+			/*
 			if (prev_is_NOT) {
 				if (!IsNonNumOK(input[i])) {
 					return false;
 				}
 				prev_is_NOT = false;
 			}
+			*/
 
-			input_str_[input_pos] = input[i];
+			input_str_.push_back(input[i]);
 			++input_pos;
 
 			if (in_var) {
 				if (!IsCharOK(input[i])) {
 					return false;
+				}
+				// wrong place
+				// i don't have to care about the case where
+				// i == input.length() -1
+				if (i < input.length() - 1) {
+					if (!IsCharOK(input[i + 1])) {
+						in_var = false;
+						var_pos_.back().second = input_pos - 1;
+					}
 				}
 			}
 			else {
@@ -62,22 +73,51 @@ bool SimplifyBoolExpr::InitCheckInput(const std::string &input) {
 					&& input[i] != '|'
 					&& input[i] != '~') {
 						// at the beginning of a variable name
-						if (!IsNonNumOK(input[i])) {
+						// if (!IsNonNumOK(input[i])) {
+						if (!IsCharOK(input[i])) {
 							return false;
 						}
 						in_var = true;
+						// i have to care about the case where
+						// i == input.length() -1
+						if (i < input.length() - 1) {
+							if (!IsCharOK(input[i + 1])) {
+								in_var = false;
+							}
+						}
+						if (i == input.length() - 1) {
+							in_var = false;
+						}
+						var_pos_.push_back(std::make_pair<unsigned int, unsigned int>(input_pos - 1, input.length()));
+						if (!in_var) {
+							var_pos_.back().second = input_pos - 1;
+						}
 				}
 				else {
 					switch (input[i]) {
 						case '&':
-							in_var = false;
+							/*
+							//in_var = false;
+							// replaced with a function with more functionality
+							MarkVarNameStrEnd(input_pos,in_var);
+							*/
 							break;
 						case '|':
-							in_var = false;
+							/*
+							//in_var = false;
+							// replaced with a function with more functionality
+							MarkVarNameStrEnd(input_pos,in_var);
+							*/
 							break;
 						case '~':
-							in_var = false;
+							/*
+							//in_var = false;
+							// replaced with a function with more functionality
+							MarkVarNameStrEnd(input_pos,in_var);
+							*/
+							/*
 							prev_is_NOT = true;
+							*/
 							break;
 						default:
 							// what is this char? error!
@@ -90,5 +130,7 @@ bool SimplifyBoolExpr::InitCheckInput(const std::string &input) {
 		}
 	}
 
+	// TODO: only checked for illegal characters, grammar check needed
 	return true;
 }
+

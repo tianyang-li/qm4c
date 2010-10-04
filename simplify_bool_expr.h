@@ -38,6 +38,10 @@ private:
 	inline bool IsNonNumOK(char c);
 	// checks to see if a char is an alphabet or num or _
 	inline bool IsCharOK(char c);
+	/*
+	// mark the end of a variable name
+	inline void MarkVarNameStrEnd(int input_pos, bool &in_var);
+	*/
 
 	// strips spaces from input, stores results in input_str_
 	// checks for the following kind of errors
@@ -55,6 +59,15 @@ private:
 
 };
 
+/*
+inline void SimplifyBoolExpr::MarkVarNameStrEnd(int input_pos, bool &in_var) {
+	if (in_var) {
+		var_pos_.back().second = input_pos - 1;
+		in_var = false;
+	}
+}
+*/
+
 inline bool SimplifyBoolExpr::IsNonNumOK(char c) {
 	return (std::isalpha(c) || (c == '_'));
 }
@@ -64,3 +77,4 @@ inline bool SimplifyBoolExpr::IsCharOK(char c) {
 }
 
 #endif  // QM4C_SIMPLIFY_BOOL_EXPR_H_
+
