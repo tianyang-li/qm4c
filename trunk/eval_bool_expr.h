@@ -30,57 +30,44 @@
 #include <vector>
 #include <utility>
 
+class EvalBoolExpr;
+
+class ExprNode {
+	friend class EvalBoolExpr;
+
+public:
+	ExprNode();
+
+	// in order of increasing precedence
+	enum NodeType {OP_OR, OP_AND, OP_NOT, OP_PAR, OP_VAR};
+	bool DoEval(std::map<std::string, bool> const &var_val,
+		std::string const &expr_str);
+
+private:
+	// location of expr in the str
+	std::pair<unsigned int, unsigned int> expr_loc_;
+	NodeType op_;
+	ExprNode *left_, *right_;
+
+};
+
 class EvalBoolExpr {
 public:
 	EvalBoolExpr(std::map<std::string, bool> const &var_map, std::string const &expr_str);
 
 	// build structure for evaluation
 	// returns false if an error occurs
-	bool InitBuildEvalStruct();
+	// this recursive
+	// closed interval [expr_begin, expr_end]
+	bool InitBuildEvalStruct(unsigned int expr_begin, unsigned int expr_end);
 
 private:
 	// get each variable's value from here
 	std::map<std::string, bool> const *expr_var_;
 	std::string const *input_str_;
-
-	/*
-	// not really a node in the tree, but it's like a tree stored in a vector
-	class EvalNode {
-		friend class EvalBoolExpr;
-
-	public:
-
-	private:
-		EvalNode(std::map<std::string, bool> const &var_val,
-			std::string const &expr_str);
-		// get evaluation result
-		bool DoEval();
-
-		// set location of the expression
-		// returns false if error is found
-		// it's an interval like this
-		// [expr_begin, expr_end]
-		bool InitSetExprLoc(unsigned int expr_begin, unsigned int expr_end);
-
-		std::pair<unsigned int, unsigned int> expr_loc_;
-
-		// OP_VAR_ are for a single variable
-		// OP_NOT_, OP_PAR_ will only use left_
-		// OP_PAR_ is for something like (X)
-		// these 5 are listed in order of increasing precedence
-		enum NodeType_ {OP_OR_, OP_AND_, OP_NOT_, OP_PAR_, OP_VAR_};
-
-		// this is to be set in SetExprLoc()
-		NodeType_ node_op_;
-
-		EvalBoolExpr::EvalNode *left_, *right_;
-
-		std::map<std::string, bool> const *node_expr_var_;
-		std::string const *node_input_str_;
-	};
-
-	std::vector<EvalNode> expr_tree_;
-	*/
+	
+	// stores each level of operation
+	std::vector<ExprNode> expr_parse_;
 
 };
 

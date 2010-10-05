@@ -166,7 +166,7 @@ bool SimplifyBoolExpr::InitCheckInput(const std::string &input) {
 		return false;
 	}
 
-	return eval.InitBuildEvalStruct();
+	return eval.InitBuildEvalStruct(0, input_str_.length());
 }
 
 SimplifyBoolExpr::VarType SimplifyBoolExpr::CheckVar(const std::string &var) {
