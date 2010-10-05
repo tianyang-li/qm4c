@@ -121,7 +121,7 @@ bool SimplifyBoolExpr::InitCheckInput(const std::string &input) {
 		}
 	}
 
-	// TODO: only checked for illegal characters, grammar check needed
+	// XXX: only checked for illegal characters, grammar check needed
 
 	// stores where non-0 constants are, replace them with 1 later
 	std::vector< std::pair<unsigned int, unsigned int> > pos_1;
@@ -162,6 +162,10 @@ bool SimplifyBoolExpr::InitCheckInput(const std::string &input) {
 		return false;
 	}
 
+	if (!OpCheck()) {
+		return false;
+	}
+
 	return eval.InitBuildEvalStruct();
 }
 
@@ -186,5 +190,10 @@ SimplifyBoolExpr::VarType SimplifyBoolExpr::CheckVar(const std::string &var) {
 		}
 	}
 	return BOOL_VAR_;
+}
+
+bool SimplifyBoolExpr::OpCheck() {
+	// TODO: work on this!!
+	return true;
 }
 

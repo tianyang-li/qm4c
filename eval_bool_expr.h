@@ -43,6 +43,7 @@ private:
 	std::map<std::string, bool> const *expr_var_;
 	std::string const *input_str_;
 
+	/*
 	// not really a node in the tree, but it's like a tree stored in a vector
 	class EvalNode {
 		friend class EvalBoolExpr;
@@ -57,6 +58,8 @@ private:
 
 		// set location of the expression
 		// returns false if error is found
+		// it's an interval like this
+		// [expr_begin, expr_end]
 		bool InitSetExprLoc(unsigned int expr_begin, unsigned int expr_end);
 
 		std::pair<unsigned int, unsigned int> expr_loc_;
@@ -77,6 +80,7 @@ private:
 	};
 
 	std::vector<EvalNode> expr_tree_;
+	*/
 
 };
 
