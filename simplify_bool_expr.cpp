@@ -162,11 +162,13 @@ bool SimplifyBoolExpr::InitCheckInput(const std::string &input) {
 		return false;
 	}
 
-	if (!OpCheck()) {
+	if (!ExprCheck()) {
 		return false;
 	}
 
-	return eval.InitBuildEvalStruct(0, input_str_.length());
+	// it's useless, see comments InitBuildEvalStruct()
+	ExprNode *useless_ptr;
+	return eval.InitBuildEvalStruct(0, input_str_.length(), useless_ptr);
 }
 
 SimplifyBoolExpr::VarType SimplifyBoolExpr::CheckVar(const std::string &var) {
@@ -195,5 +197,29 @@ SimplifyBoolExpr::VarType SimplifyBoolExpr::CheckVar(const std::string &var) {
 bool SimplifyBoolExpr::OpCheck() {
 	// TODO: work on this!!
 	return true;
+}
+
+bool SimplifyBoolExpr::ExprCheck() {
+	// TODO: optimization? combine these two?
+	return OpCheck() && ParCheck();
+}
+
+bool SimplifyBoolExpr::ParCheck() {
+	// it's like a stack for parentheses
+	// use signed version to prevent unnecessary errors
+	int par_stack = 0;
+	for (unsigned int i = 0; i != input_str_.length(); ++i) {
+		switch (input_str_[i]) {
+			case '(':
+				++par_stack;
+				break;
+			case ')':
+				--par_stack;
+				break;
+			default:
+				break;
+		}
+	}
+	return !par_stack;
 }
 
