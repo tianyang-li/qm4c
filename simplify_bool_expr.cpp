@@ -21,13 +21,22 @@
 #include "simplify_bool_expr.h"
 
 SimplifyBoolExpr::SimplifyBoolExpr()
-: eval(expr_var_, input_str_) {
+: eval(input_str_) {
 }
 
 bool SimplifyBoolExpr::MakeSimple(std::string const &input, std::string &output) {
+	eval.InitPrep();
+
 	if (!InitCheckInput(input)) {
 		return false;
 	}
+
+	CreatTruthTable();
+
+	// TODO: processing
+
+	CleanUp();
+
 	return true;
 }
 
@@ -210,5 +219,27 @@ bool SimplifyBoolExpr::ParCheck() {
 		}
 	}
 	return !par_stack;
+}
+
+void SimplifyBoolExpr::CreatTruthTable() {
+	unsigned int range = 1 << (expr_var_.size() - 2);
+	unsigned int var_index;
+	std::map<std::string, bool>::iterator var_it;
+	for (unsigned int i = 0; i != range; ++i) {
+		var_index = 0;
+		for (var_it = expr_var_.begin(); var_it != expr_var_.end(); ++var_it) {
+			if (var_it->first != "0"
+				&& var_it->first != "1") {
+					var_it->second = (((1 << var_index) & i) != 0);
+					++var_index;
+			}
+		}
+		truth_table_[i] = eval.EvalResult(expr_var_);
+	}
+}
+
+void SimplifyBoolExpr::CleanUp() {
+	expr_var_.clear();
+	truth_table_.clear();
 }
 

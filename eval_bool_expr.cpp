@@ -33,24 +33,27 @@ bool ExprNode::DoEval(std::map<std::string, bool> const &var_val,
 		case OP_OR:
 			return token[left_].DoEval(var_val, expr_str, token) || token[right_].DoEval(var_val, expr_str, token);
 			break;
+
 		case OP_AND:
 			return token[left_].DoEval(var_val, expr_str, token) && token[right_].DoEval(var_val, expr_str, token);
 			break;
+
 		case OP_NOT:
-			return token[left_].DoEval(var_val, expr_str, token);
+			return !token[left_].DoEval(var_val, expr_str, token);
 			break;
+
 		case OP_PAR:
 			return token[left_].DoEval(var_val, expr_str, token);
 			break;
+
 		case OP_VAR:
 			return var_val.find(expr_str.substr(expr_loc_.first, expr_loc_.second - expr_loc_.first + 1))->second;
 			break;
 	}
 }
 
-EvalBoolExpr::EvalBoolExpr(std::map<std::string, bool> const &var_map, 
-						   std::string const &expr_str)
-: expr_var_(&var_map), input_str_(&expr_str) {
+EvalBoolExpr::EvalBoolExpr(std::string const &expr_str)
+: input_str_(&expr_str) {
 }
 
 bool EvalBoolExpr::InitBuildEvalStruct(unsigned int expr_begin, unsigned int expr_end,
@@ -178,4 +181,11 @@ bool EvalBoolExpr::InitBuildEvalStruct(unsigned int expr_begin, unsigned int exp
 	return true;
 }
 
+bool EvalBoolExpr::EvalResult(const std::map<std::string,bool> &var_val) {
+	return expr_parse_[0].DoEval(var_val, *input_str_, expr_parse_);
+}
+
+void EvalBoolExpr::InitPrep() {
+	expr_parse_.clear();
+}
 
