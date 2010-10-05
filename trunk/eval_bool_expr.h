@@ -59,7 +59,10 @@ public:
 	// returns false if an error occurs
 	// this recursive
 	// closed interval [expr_begin, expr_end]
-	bool InitBuildEvalStruct(unsigned int expr_begin, unsigned int expr_end);
+	// child has to be pointed to the vector[k]
+	// if this is the 1st level of recursion
+	// find a pointer and fill in the space
+	bool InitBuildEvalStruct(unsigned int expr_begin, unsigned int expr_end, ExprNode *&child);
 
 private:
 	// get each variable's value from here

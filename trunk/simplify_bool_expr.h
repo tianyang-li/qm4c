@@ -46,6 +46,12 @@ private:
 	// check operators in input_str_
 	// if an error is found, false is returned
 	bool OpCheck();
+
+	// check for errors in input_str_
+	bool ExprCheck();
+
+	// parentheses error check
+	bool ParCheck();
 	
 	enum VarType {BOOL_1_, BOOL_0_, BOOL_VAR_, BOOL_ERROR_};
 	VarType CheckVar(std::string const &var);
