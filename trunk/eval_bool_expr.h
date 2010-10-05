@@ -53,7 +53,7 @@ private:
 
 class EvalBoolExpr {
 public:
-	EvalBoolExpr(std::map<std::string, bool> const &var_map, std::string const &expr_str);
+	EvalBoolExpr(std::string const &expr_str);
 
 	// build structure for evaluation
 	// returns false if an error occurs
@@ -66,11 +66,12 @@ public:
 	bool InitBuildEvalStruct(unsigned int expr_begin, unsigned int expr_end, bool side,
 		ExprNode &par);
 
+	bool EvalResult(std::map<std::string, bool> const &var_val);
+
+	void InitPrep();
+
 private:
-	// get each variable's value from here
-	std::map<std::string, bool> const *expr_var_;
 	std::string const *input_str_;
-	
 	// stores each level of operation
 	std::vector<ExprNode> expr_parse_;
 

@@ -38,6 +38,10 @@ public:
 	bool MakeSimple(std::string const &input, std::string &output);
 
 private:
+	void CreatTruthTable();
+
+	void CleanUp();
+
 	// checks to see if a char is an alphabet or _
 	inline bool IsNonNumOK(char c);
 	// checks to see if a char is an alphabet or num or _
@@ -60,6 +64,8 @@ private:
 	std::map<std::string, bool> expr_var_;
 
 	EvalBoolExpr eval;
+
+	std::map<unsigned int, bool> truth_table_;
 
 };
 
