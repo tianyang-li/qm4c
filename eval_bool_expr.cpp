@@ -20,79 +20,75 @@
 
 #include "eval_bool_expr.h"
 
+ExprNode::ExprNode()
+: op_(OP_VAR), left_(0), right_(0) {
+}
+
+bool ExprNode::DoEval(std::map<std::string, bool> const &var_val,
+					  std::string const &expr_str) {
+	switch (op_) {
+		case OP_OR:
+			return left_->DoEval(var_val, expr_str) || right_->DoEval(var_val, expr_str);
+			break;
+		case OP_AND:
+			return left_->DoEval(var_val, expr_str) && right_->DoEval(var_val, expr_str);
+			break;
+		case OP_NOT:
+			return !left_->DoEval(var_val, expr_str);
+			break;
+		case OP_PAR:
+			return left_->DoEval(var_val, expr_str);
+			break;
+		case OP_VAR:
+			return var_val.find(expr_str.substr(expr_loc_.first, expr_loc_.second - expr_loc_.first + 1))->second;
+			break;
+	}
+}
+
 EvalBoolExpr::EvalBoolExpr(std::map<std::string, bool> const &var_map, 
 						   std::string const &expr_str)
 : expr_var_(&var_map), input_str_(&expr_str) {
 }
 
-/*
-bool EvalBoolExpr::InitBuildEvalStruct() {
-	EvalNode cur_expr(*expr_var_, *input_str_);
-	if (!cur_expr.InitSetExprLoc(0, input_str_->length() - 1)) {
-		return false;
-	}
+bool EvalBoolExpr::InitBuildEvalStruct(unsigned int expr_begin, unsigned int expr_end) {
+	ExprNode temp_expr_node;
+	temp_expr_node.expr_loc_ = std::make_pair(expr_begin, expr_end);
+	expr_parse_.push_back(temp_expr_node);
 
-	expr_tree_.push_back(cur_expr);
-	return true;
-}
+	// location to separate
+	// for   OP_OR  OP_AND		(expr_begin, sep_loc)		(sep_loc + 1, expr_end)
+	unsigned int sep_loc; 
 
-bool EvalBoolExpr::EvalNode::InitSetExprLoc(unsigned int expr_begin, 
-											unsigned int expr_end) {
-	// stores each pair of parentheses
-	std::vector< std::pair<unsigned int, unsigned int> > temp_par_pair;
+	// TODO: processing
 
-	for (unsigned int i = expr_begin; i <= expr_end; ++i) {
-	}
-
-	// TODO: expr processing
-
-	EvalNode temp_eval_node(var;
-	switch (node_op_) {
-		case OP_VAR_:
+	switch (temp_expr_node.op_) {
+		case ExprNode::OP_OR:
+			return InitBuildEvalStruct(expr_begin, sep_loc) 
+				&& InitBuildEvalStruct(sep_loc + 1, expr_end);
 			break;
-		case OP_PAR_:
-			// check for empty parenthesis, sth like ()
+
+		case ExprNode::OP_AND:
+			return InitBuildEvalStruct(expr_begin, sep_loc) 
+				&& InitBuildEvalStruct(sep_loc + 1, expr_end);
+			break;
+
+		case ExprNode::OP_NOT:
+			return InitBuildEvalStruct(expr_begin + 1, expr_end);
+			break;
+
+		// strips away ( )
+		case ExprNode::OP_PAR:
 			if (expr_begin + 1 == expr_end) {
 				return false;
 			}
-			temp_eval_node
+			return InitBuildEvalStruct(expr_begin + 1, expr_end - 1);
+			break;
 
+		case ExprNode::OP_VAR:
 			break;
 	}
-	
+
 	return true;
 }
-
-bool EvalBoolExpr::EvalNode::DoEval() {
-	switch (node_op_) {
-		case OP_AND_:
-			return left_->DoEval() && right_->DoEval();
-			break;
-
-		case OP_OR_:
-			return left_->DoEval() || right_->DoEval();
-			break;
-
-		case OP_NOT_:
-			return !left_->DoEval();
-			break;
-
-		case OP_PAR_:
-			return left_->DoEval();
-			break;
-
-		case OP_VAR_:
-			return node_expr_var_->find(node_input_str_->substr(expr_loc_.first, 
-				expr_loc_.second - expr_loc_.first + 1))->second;
-			break;
-	}
-}
-
-EvalBoolExpr::EvalNode::EvalNode(std::map<std::string, bool> const &var_val,
-								 std::string const &expr_str) 
-: left_(0), right_(0), node_op_(OP_VAR_),
-node_expr_var_(&var_val), node_input_str_(&expr_str) {
-}
-*/
 
 
