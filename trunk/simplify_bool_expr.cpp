@@ -127,11 +127,6 @@ bool SimplifyBoolExpr::InitCheckInput(const std::string &input) {
 	std::vector< std::pair<unsigned int, unsigned int> > pos_1;
 
 	for (unsigned int i = 0; i != var_pos_.size(); ++i) {
-		if (i > 0) {
-			if (var_pos_[i].first == var_pos_[i - 1].second + 1) {
-				return false;
-			}
-		}
 
 		switch (CheckVar(input_str_.substr(var_pos_[i].first, var_pos_[i].second - var_pos_[i].first + 1))) {
 			case BOOL_0_:
@@ -162,13 +157,17 @@ bool SimplifyBoolExpr::InitCheckInput(const std::string &input) {
 		return false;
 	}
 
-	if (!ExprCheck()) {
+	if (!ParCheck()) {
 		return false;
 	}
 
 	// it's useless, see comments InitBuildEvalStruct()
-	ExprNode *useless_ptr;
-	return eval.InitBuildEvalStruct(0, input_str_.length(), useless_ptr);
+	ExprNode useless_expr_node;
+	if (!eval.InitBuildEvalStruct(0, input_str_.length() - 1, false, useless_expr_node)) {
+		return false;
+	}
+
+	return true; 
 }
 
 SimplifyBoolExpr::VarType SimplifyBoolExpr::CheckVar(const std::string &var) {
@@ -192,16 +191,6 @@ SimplifyBoolExpr::VarType SimplifyBoolExpr::CheckVar(const std::string &var) {
 		}
 	}
 	return BOOL_VAR_;
-}
-
-bool SimplifyBoolExpr::OpCheck() {
-	// TODO: work on this!!
-	return true;
-}
-
-bool SimplifyBoolExpr::ExprCheck() {
-	// TODO: optimization? combine these two?
-	return OpCheck() && ParCheck();
 }
 
 bool SimplifyBoolExpr::ParCheck() {

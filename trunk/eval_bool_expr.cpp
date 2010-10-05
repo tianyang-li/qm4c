@@ -18,6 +18,8 @@
  * E-Mail tmy1018 gmail com
  */
 
+#include <cctype>
+
 #include "eval_bool_expr.h"
 
 ExprNode::ExprNode()
@@ -25,19 +27,20 @@ ExprNode::ExprNode()
 }
 
 bool ExprNode::DoEval(std::map<std::string, bool> const &var_val,
-					  std::string const &expr_str) {
+					  std::string const &expr_str,
+					  std::vector<ExprNode> const &token) const {
 	switch (op_) {
 		case OP_OR:
-			return left_->DoEval(var_val, expr_str) || right_->DoEval(var_val, expr_str);
+			return token[left_].DoEval(var_val, expr_str, token) || token[right_].DoEval(var_val, expr_str, token);
 			break;
 		case OP_AND:
-			return left_->DoEval(var_val, expr_str) && right_->DoEval(var_val, expr_str);
+			return token[left_].DoEval(var_val, expr_str, token) && token[right_].DoEval(var_val, expr_str, token);
 			break;
 		case OP_NOT:
-			return !left_->DoEval(var_val, expr_str);
+			return token[left_].DoEval(var_val, expr_str, token);
 			break;
 		case OP_PAR:
-			return left_->DoEval(var_val, expr_str);
+			return token[left_].DoEval(var_val, expr_str, token);
 			break;
 		case OP_VAR:
 			return var_val.find(expr_str.substr(expr_loc_.first, expr_loc_.second - expr_loc_.first + 1))->second;
@@ -51,15 +54,21 @@ EvalBoolExpr::EvalBoolExpr(std::map<std::string, bool> const &var_map,
 }
 
 bool EvalBoolExpr::InitBuildEvalStruct(unsigned int expr_begin, unsigned int expr_end,
-									   ExprNode *&child) {
+									   bool side, ExprNode &par) {
 	if (expr_begin > expr_end) {
 		return false;
+	}
+
+	if (side) {
+		par.right_ = expr_parse_.size();
+	}
+	else {
+		par.left_ = expr_parse_.size();
 	}
 
 	ExprNode temp_expr_node;
 	temp_expr_node.expr_loc_ = std::make_pair(expr_begin, expr_end);
 	expr_parse_.push_back(temp_expr_node);
-	child = &expr_parse_.back();
 
 	// location to separate
 	// for   OP_OR  OP_AND		(expr_begin, sep_loc)		(sep_loc + 1, expr_end)
@@ -79,31 +88,37 @@ bool EvalBoolExpr::InitBuildEvalStruct(unsigned int expr_begin, unsigned int exp
 		switch (input_str_->at(expr_end - i)) {
 			// set i = expr_end to break out of the loop? better not
 			case '|':
+				++i;
+				if (input_str_->at(expr_end - i) != '|') {
+					return false;
+				}
 				if (!par_stack.size()) {
-					++i;
-					if (temp_expr_node.op_ != ExprNode::OP_OR) {
+					if (expr_parse_[expr_parse_.size() - 1].op_ != ExprNode::OP_OR) {
 						sep_loc = expr_end - i;
-						temp_expr_node.op_ = ExprNode::OP_OR;
+						expr_parse_[expr_parse_.size() - 1].op_ = ExprNode::OP_OR;
 					}
 				}
 				break;
 
 			case '&':
+				++i;
+				if (input_str_->at(expr_end - i) != '&') {
+					return false;
+				}
 				if (!par_stack.size()) {
-					++i;
-					if (temp_expr_node.op_ != ExprNode::OP_OR 
-						&& temp_expr_node.op_ != ExprNode::OP_AND) {
+					if (expr_parse_[expr_parse_.size() - 1].op_ != ExprNode::OP_OR 
+						&& expr_parse_[expr_parse_.size() - 1].op_ != ExprNode::OP_AND) {
 						sep_loc = expr_end - i;
-						temp_expr_node.op_ = ExprNode::OP_AND;
+						expr_parse_[expr_parse_.size() - 1].op_ = ExprNode::OP_AND;
 					}
 				}
 				break;
 
-			case '~':
+			case '!':
 				if (!par_stack.size()) {
-					if (temp_expr_node.op_ != ExprNode::OP_OR
-						&& temp_expr_node.op_ != ExprNode::OP_AND) {
-							temp_expr_node.op_ = ExprNode::OP_NOT;
+					if (expr_parse_[expr_parse_.size() - 1].op_ != ExprNode::OP_OR
+						&& expr_parse_[expr_parse_.size() - 1].op_ != ExprNode::OP_AND) {
+							expr_parse_[expr_parse_.size() - 1].op_ = ExprNode::OP_NOT;
 							sep_loc = expr_end - i;
 					}
 				}
@@ -117,8 +132,9 @@ bool EvalBoolExpr::InitBuildEvalStruct(unsigned int expr_begin, unsigned int exp
 				// par check OP_PAR
 				if (i == expr_end - expr_begin
 					&& par_stack.back() == expr_end) {
-						temp_expr_node.op_ = ExprNode::OP_PAR;
+						expr_parse_[expr_parse_.size() - 1].op_ = ExprNode::OP_PAR;
 				}
+				par_stack.pop_back();
 				break;
 
 			default:
@@ -126,22 +142,25 @@ bool EvalBoolExpr::InitBuildEvalStruct(unsigned int expr_begin, unsigned int exp
 		}
 	}
 
-	switch (temp_expr_node.op_) {
+	// recursion
+	unsigned cur_index = expr_parse_.size() - 1;
+	switch (expr_parse_[expr_parse_.size() - 1].op_) {
+		// side: false - left; true - right
 		// separate at ||
 		case ExprNode::OP_OR:
-			return InitBuildEvalStruct(expr_begin, sep_loc, expr_parse_.back().left_) 
-				&& InitBuildEvalStruct(sep_loc + 1, expr_end, expr_parse_.back().right_);
+			return InitBuildEvalStruct(expr_begin, sep_loc - 1, false, expr_parse_[cur_index]) 
+				&& InitBuildEvalStruct(sep_loc + 2, expr_end, true, expr_parse_[cur_index]);
 			break;
 
 		// separate at &&
 		case ExprNode::OP_AND:
-			return InitBuildEvalStruct(expr_begin, sep_loc, expr_parse_.back().left_) 
-				&& InitBuildEvalStruct(sep_loc + 1, expr_end, expr_parse_.back().right_);
+			return InitBuildEvalStruct(expr_begin, sep_loc - 1, false, expr_parse_[cur_index]) 
+				&& InitBuildEvalStruct(sep_loc + 2, expr_end, true, expr_parse_[cur_index]);
 			break;
 
 		// strips away ~
 		case ExprNode::OP_NOT:
-			return InitBuildEvalStruct(expr_begin + 1, expr_end, expr_parse_.back().left_);
+			return InitBuildEvalStruct(expr_begin + 1, expr_end, false, expr_parse_[cur_index]);
 			break;
 
 		// strips away ( )
@@ -149,7 +168,7 @@ bool EvalBoolExpr::InitBuildEvalStruct(unsigned int expr_begin, unsigned int exp
 			if (expr_begin + 1 == expr_end) {
 				return false;
 			}
-			return InitBuildEvalStruct(expr_begin + 1, expr_end - 1, expr_parse_.back().left_);
+			return InitBuildEvalStruct(expr_begin + 1, expr_end - 1, false, expr_parse_[expr_parse_.size() - 1]);
 			break;
 
 		case ExprNode::OP_VAR:
