@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'qm4c.ui'
 **
-** Created: Tue Oct 5 23:40:05 2010
+** Created: Wed Oct 6 02:02:19 2010
 **      by: Qt User Interface Compiler version 4.6.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -41,6 +41,7 @@ public:
     QLabel *label_2;
     QLabel *label;
     QPlainTextEdit *boolExprOutput;
+    QLabel *label_3;
     QMenuBar *menuBar;
     QMenu *menuHelp;
     QToolBar *mainToolBar;
@@ -51,6 +52,7 @@ public:
         if (QM4CClass->objectName().isEmpty())
             QM4CClass->setObjectName(QString::fromUtf8("QM4CClass"));
         QM4CClass->resize(720, 563);
+        QM4CClass->setLocale(QLocale(QLocale::English, QLocale::UnitedStates));
         actionAbout_QM4C = new QAction(QM4CClass);
         actionAbout_QM4C->setObjectName(QString::fromUtf8("actionAbout_QM4C"));
         actionQM4C_Help = new QAction(QM4CClass);
@@ -71,13 +73,13 @@ public:
         boolExprInput->setTabChangesFocus(true);
         boolExprInput->setLineWrapMode(QPlainTextEdit::WidgetWidth);
 
-        gridLayout->addWidget(boolExprInput, 0, 1, 1, 1);
+        gridLayout->addWidget(boolExprInput, 0, 2, 1, 1);
 
         simplifyButton = new QPushButton(centralWidget);
         simplifyButton->setObjectName(QString::fromUtf8("simplifyButton"));
         simplifyButton->setLocale(QLocale(QLocale::English, QLocale::UnitedStates));
         simplifyButton->setAutoDefault(false);
-        simplifyButton->setDefault(true);
+        simplifyButton->setDefault(false);
 
         gridLayout->addWidget(simplifyButton, 1, 0, 1, 1);
 
@@ -99,7 +101,12 @@ public:
         boolExprOutput->setLocale(QLocale(QLocale::English, QLocale::UnitedStates));
         boolExprOutput->setReadOnly(true);
 
-        gridLayout->addWidget(boolExprOutput, 2, 1, 1, 1);
+        gridLayout->addWidget(boolExprOutput, 2, 2, 1, 1);
+
+        label_3 = new QLabel(centralWidget);
+        label_3->setObjectName(QString::fromUtf8("label_3"));
+
+        gridLayout->addWidget(label_3, 1, 2, 1, 1);
 
         QM4CClass->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(QM4CClass);
@@ -137,6 +144,11 @@ public:
         label->setText(QApplication::translate("QM4CClass", "Enter boolean\n"
 "expression to\n"
 "simplify", 0, QApplication::UnicodeUTF8));
+        label_3->setText(QApplication::translate("QM4CClass", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'SimSun'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Press &quot;Simplify&quot; button after entering.</p></body></html>", 0, QApplication::UnicodeUTF8));
         menuHelp->setTitle(QApplication::translate("QM4CClass", "Help", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 

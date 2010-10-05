@@ -65,6 +65,12 @@ void QM4C::SimplifyExpr() {
 
 	input_expr_ = (ui.boolExprInput->toPlainText()).toStdString();
 
+	// remove returns
+	unsigned int ret_loc = input_expr_.find('\n');
+	if (ret_loc != std::string::npos) {
+		input_expr_.erase(ret_loc);
+	}
+
 	Ui::PleaseWaitDlg please_wait_dlg_ui;
 	QDialog please_wait;
 	please_wait_dlg_ui.setupUi(&please_wait);

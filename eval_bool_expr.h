@@ -41,13 +41,13 @@ public:
 	// in order of increasing precedence
 	enum NodeType {OP_OR, OP_AND, OP_NOT, OP_PAR, OP_VAR};
 	bool DoEval(std::map<std::string, bool> const &var_val,
-		std::string const &expr_str);
+		std::string const &expr_str, std::vector<ExprNode> const &token) const;
 
 private:
 	// location of expr in the str
 	std::pair<unsigned int, unsigned int> expr_loc_;
 	NodeType op_;
-	ExprNode *left_, *right_;
+	unsigned int left_, right_;
 
 };
 
@@ -62,7 +62,9 @@ public:
 	// child has to be pointed to the vector[k]
 	// if this is the 1st level of recursion
 	// find a pointer and fill in the space
-	bool InitBuildEvalStruct(unsigned int expr_begin, unsigned int expr_end, ExprNode *&child);
+	// side: false - left; true - right
+	bool InitBuildEvalStruct(unsigned int expr_begin, unsigned int expr_end, bool side,
+		ExprNode &par);
 
 private:
 	// get each variable's value from here

@@ -43,13 +43,6 @@ private:
 	// checks to see if a char is an alphabet or num or _
 	inline bool IsCharOK(char c);
 
-	// check operators in input_str_
-	// if an error is found, false is returned
-	bool OpCheck();
-
-	// check for errors in input_str_
-	bool ExprCheck();
-
 	// parentheses error check
 	bool ParCheck();
 	
