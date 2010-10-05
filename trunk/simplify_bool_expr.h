@@ -23,12 +23,16 @@
 
 #include <string>
 #include <map>
-#include <list>
+#include <vector>
 #include <cctype>
 #include <utility>
 
+#include "eval_bool_expr.h"
+
 class SimplifyBoolExpr {
 public:
+	SimplifyBoolExpr();
+
 	// returns true if input is legal and output is the simplified expression
 	// returns false if input is illegal
 	bool MakeSimple(std::string const &input, std::string &output);
@@ -38,10 +42,9 @@ private:
 	inline bool IsNonNumOK(char c);
 	// checks to see if a char is an alphabet or num or _
 	inline bool IsCharOK(char c);
-	/*
-	// mark the end of a variable name
-	inline void MarkVarNameStrEnd(int input_pos, bool &in_var);
-	*/
+	
+	enum VarType {BOOL_1_, BOOL_0_, BOOL_VAR_, BOOL_ERROR_};
+	VarType CheckVar(std::string const &var);
 
 	// strips spaces from input, stores results in input_str_
 	// checks for the following kind of errors
@@ -53,20 +56,9 @@ private:
 	// stores varibles' strings and values
 	std::map<std::string, bool> expr_var_;
 
-	// stores the beginning and end of each variable name string
-	// in input_str_
-	std::list< std::pair<unsigned int, unsigned int> > var_pos_;
+	EvalBoolExpr eval;
 
 };
-
-/*
-inline void SimplifyBoolExpr::MarkVarNameStrEnd(int input_pos, bool &in_var) {
-	if (in_var) {
-		var_pos_.back().second = input_pos - 1;
-		in_var = false;
-	}
-}
-*/
 
 inline bool SimplifyBoolExpr::IsNonNumOK(char c) {
 	return (std::isalpha(c) || (c == '_'));
