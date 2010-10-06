@@ -26,6 +26,7 @@ SimplifyBoolExpr::SimplifyBoolExpr()
 
 bool SimplifyBoolExpr::MakeSimple(std::string const &input, std::string &output) {
 	eval.InitPrep();
+	CleanUp();
 
 	if (!InitCheckInput(input)) {
 		return false;
@@ -35,7 +36,7 @@ bool SimplifyBoolExpr::MakeSimple(std::string const &input, std::string &output)
 
 	// TODO: processing
 
-	CleanUp();
+	void QM();
 
 	return true;
 }
@@ -222,6 +223,10 @@ bool SimplifyBoolExpr::ParCheck() {
 }
 
 void SimplifyBoolExpr::CreatTruthTable() {
+	// get as much as i need XXX: maybe don't don this in the future
+	var_table_.resize(expr_var_.size() - 2);
+	var_table_.front().resize(expr_var_.size() - 2);
+
 	unsigned int range = 1 << (expr_var_.size() - 2);
 	unsigned int var_index;
 	std::map<std::string, bool>::iterator var_it;
@@ -234,12 +239,63 @@ void SimplifyBoolExpr::CreatTruthTable() {
 					++var_index;
 			}
 		}
-		truth_table_[i] = eval.EvalResult(expr_var_);
+		// only i's whose function value is true is needed
+		if (eval.EvalResult(expr_var_)) {
+			BoolProdTerm temp_prod;
+			temp_prod.var_ = i;
+			var_table_.front()[temp_prod.OneCount()].push_back(temp_prod);
+		}
 	}
 }
 
 void SimplifyBoolExpr::CleanUp() {
 	expr_var_.clear();
-	truth_table_.clear();
+	var_table_.clear();
+}
+
+void SimplifyBoolExpr::QM() {
+	// core of QM implementation
+	for (int i = 0; i < expr_var_.size(); ++i) {
+		for (int j = 0; j < expr_var_.size() - i -1; ++j)
+	}
+}
+
+bool BoolProdTerm::OkToCombine(const BoolProdTerm &p1, 
+							   const BoolProdTerm &p2, 
+							   BoolProdTerm &result) {
+	// boolean OR
+	unsigned int diff_count = 0;
+
+	unsigned int diff_loc;
+
+	for (unsigned int i = 0; i != 8 * sizeof(unsigned int); ++i) {
+		if ((p1.var_ & (1 << i)) != (p2.var_ & (1 << i))) {
+			if (p1.removed_var_.find(i) == p1.removed_var_.end()
+				&& p2.removed_var_.find(i) == p2.removed_var_.end()) {
+					++diff_count;
+					diff_loc = i;
+			}
+		}
+	}
+
+	if (diff_count > 1) return false;
+
+	result.var_ = p1.var_;
+	result.removed_var_ = p1.removed_var_;
+	if (diff_count == 1) {
+		result.removed_var_.insert(diff_loc);
+	}
+
+	return true;
+}
+
+unsigned int BoolProdTerm::OneCount() {
+	unsigned int one_count = 0;
+	for (unsigned int i = 0; i != 8 * sizeof(var_); ++i) {
+		if ((var_ & (1 << i)) != 0) {
+			++one_count;
+		}
+	}
+	return one_count;
 }
 
