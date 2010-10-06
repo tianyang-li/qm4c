@@ -76,8 +76,6 @@ void QM4C::SimplifyExpr() {
 	please_wait_dlg_ui.setupUi(&please_wait);
 	please_wait.show();
 
-	// TODO: add simplification here
-
 	please_wait.close();
 
 	SimplifyBoolExpr simplify_input;

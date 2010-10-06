@@ -40,6 +40,9 @@ public:
 	static bool OkToCombine(BoolProdTerm &p1, BoolProdTerm &p2,
 		BoolProdTerm &result);
 
+	// check to see if p1 and p2 represent the same thing
+	static bool Same(BoolProdTerm const &p1, BoolProdTerm const &p2);
+
 	int OneCount();
 
 private:
@@ -74,6 +77,8 @@ private:
 	// remove used variables
 	void RemoveUsed();
 
+	bool CheckProdTermDuplicate(BoolProdTerm const &new_term);
+
 	// checks to see if a char is an alphabet or _
 	inline bool IsNonNumOK(char c);
 	// checks to see if a char is an alphabet or num or _
@@ -101,11 +106,8 @@ private:
 	// index in the vector indicates how many 1's are in the term
 	std::vector< std::vector< std::vector<BoolProdTerm> > > var_table_;
 
-	// TODO modify this
-	// coverage table
-	// in map
-	// the first is prime implicant
-	std::map<int, std::vector<BoolProdTerm> > cover_table_;
+	std::vector<BoolProdTerm> prod_term_;
+
 };
 
 inline bool SimplifyBoolExpr::IsNonNumOK(char c) {
