@@ -224,9 +224,9 @@ bool SimplifyBoolExpr::ParCheck() {
 
 void SimplifyBoolExpr::CreatTruthTable() {
 	// get as much as i need XXX: maybe don't do this in the future
-	var_table_.resize(expr_var_.size() - 2);
-	for (int i = 0; i != expr_var_.size() - 2; ++i) {
-		var_table_[i].resize(expr_var_.size() - 2 - i);
+	var_table_.resize(expr_var_.size() - 1);
+	for (int i = 0; i <= expr_var_.size() - 2; ++i) {
+		var_table_[i].resize(1 << (expr_var_.size() - 2 - i));
 	}
 
 	int range = 1 << (expr_var_.size() - 2);
@@ -245,6 +245,7 @@ void SimplifyBoolExpr::CreatTruthTable() {
 		if (eval.EvalResult(expr_var_)) {
 			BoolProdTerm temp_prod;
 			temp_prod.var_ = i;
+			temp_prod.prime_impl_.insert(i);
 			var_table_[0][temp_prod.OneCount()].push_back(temp_prod);
 		}
 	}
@@ -259,8 +260,8 @@ void SimplifyBoolExpr::QM() {
 	// initialization already done in
 	// CreatTruthTable()
 	// core of QM implementation
-	for (int i = 1; i < expr_var_.size() - 2; ++i) {
-		for (int j = 0; j < expr_var_.size() - 2 - i; ++j) {
+	for (int i = 1; i <= expr_var_.size() - 2; ++i) {
+		for (int j = 0; j < (1 << (expr_var_.size() - 2 - i)); ++j) {
 			// two iterators
 			int it1, it2;
 			for (it1 = 0; it1 < var_table_[i - 1][j].size(); ++it1) {
@@ -269,6 +270,25 @@ void SimplifyBoolExpr::QM() {
 					if (BoolProdTerm::OkToCombine(var_table_[i - 1][j][it1], var_table_[i - 1][j + 1][it2], temp_prod)) {
 						var_table_[i][temp_prod.OneCount()].push_back(temp_prod);
 					}
+				}
+			}
+		}
+	}
+
+	// remove unused
+	RemoveUsed();
+}
+
+void SimplifyBoolExpr::RemoveUsed() {
+	for (int i = 0; i <= expr_var_.size() - 2; ++i) {
+		for (int j = 0; j < (1 << (expr_var_.size() - 2 - i)); ++j) {
+			int index = 0;
+			while (var_table_[i][j].begin() + index != var_table_[i][j].end()) {
+				if (var_table_[i][j][index].used_) {
+					var_table_[i][j].erase(var_table_[i][j].begin() + index);
+				}
+				else {
+					++index;
 				}
 			}
 		}
@@ -301,6 +321,13 @@ bool BoolProdTerm::OkToCombine(BoolProdTerm &p1,
 		result.removed_var_.insert(diff_loc);
 		p1.used_ = true;
 		p2.used_ = true;
+		std::set<int>::iterator union_it;
+		for (union_it = p1.prime_impl_.begin(); union_it != p1.prime_impl_.end(); ++union_it) {
+			result.prime_impl_.insert(*union_it);
+		}
+		for (union_it = p2.prime_impl_.begin(); union_it != p2.prime_impl_.end(); ++union_it) {
+			result.prime_impl_.insert(*union_it);
+		}
 	}
 
 	return true;
