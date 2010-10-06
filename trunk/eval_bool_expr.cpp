@@ -56,7 +56,7 @@ EvalBoolExpr::EvalBoolExpr(std::string const &expr_str)
 : input_str_(&expr_str) {
 }
 
-bool EvalBoolExpr::InitBuildEvalStruct(unsigned int expr_begin, unsigned int expr_end,
+bool EvalBoolExpr::InitBuildEvalStruct(int expr_begin, int expr_end,
 									   bool side, ExprNode &par) {
 	if (expr_begin > expr_end) {
 		return false;
@@ -75,17 +75,17 @@ bool EvalBoolExpr::InitBuildEvalStruct(unsigned int expr_begin, unsigned int exp
 
 	// location to separate
 	// for   OP_OR  OP_AND		(expr_begin, sep_loc)		(sep_loc + 1, expr_end)
-	unsigned int sep_loc; 
+	int sep_loc; 
 
 	// check for parentheses 
 	// make it function like a stack 
 	// it's like a depth
-	std::vector<unsigned int> par_stack;
+	std::vector<int> par_stack;
 
 	// processing
 	// i have to go backward
-	for (unsigned int i = 0; i != expr_end - expr_begin + 1; ++i) {
-		// because i is unsigned int
+	for (int i = 0; i != expr_end - expr_begin + 1; ++i) {
+		// because i is int
 		// so be careful when writing certain statements
 		// the hard part
 		switch (input_str_->at(expr_end - i)) {
