@@ -73,6 +73,9 @@ private:
 	void CleanUp();
 
 	void QM();
+	// Eliminate all columns covered by essential primes
+	// Find minimum set of rows that cover the remaining columns
+	void CoverageTable();
 
 	// remove used variables
 	void RemoveUsed();
@@ -108,6 +111,8 @@ private:
 
 	std::vector<BoolProdTerm> prod_term_;
 
+	std::vector<BoolProdTerm> final_prod_term_;
+
 };
 
 inline bool SimplifyBoolExpr::IsNonNumOK(char c) {
@@ -117,6 +122,9 @@ inline bool SimplifyBoolExpr::IsNonNumOK(char c) {
 inline bool SimplifyBoolExpr::IsCharOK(char c) {
 	return (std::isalnum(c) || (c == '_'));
 }
+
+int OneBitCount(int n);
+
 
 #endif  // QM4C_SIMPLIFY_BOOL_EXPR_H_
 

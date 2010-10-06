@@ -252,6 +252,8 @@ void SimplifyBoolExpr::CreatTruthTable() {
 void SimplifyBoolExpr::CleanUp() {
 	expr_var_.clear();
 	var_table_.clear();
+	prod_term_.clear();
+	final_prod_term_.clear();
 }
 
 void SimplifyBoolExpr::QM() {
@@ -278,7 +280,111 @@ void SimplifyBoolExpr::QM() {
 
 	// Eliminate all columns covered by essential primes
 	// Find minimum set of rows that cover the remaining columns
+	CoverageTable();
 
+}
+
+void SimplifyBoolExpr::CoverageTable() {
+	// Eliminate all columns covered by essential primes
+	std::map<int, int> prime_impl_prod_count;
+	std::set<int>::iterator prime_it;
+	for (int i = 0; i != prod_term_.size(); ++i) {
+		for (prime_it = prod_term_[i].prime_impl_.begin(); 
+			prime_it != prod_term_[i].prime_impl_.end();
+			++prime_it) {
+				if (prime_impl_prod_count.find(*prime_it) == prime_impl_prod_count.end()) {
+					prime_impl_prod_count[*prime_it] = 1;
+				}
+				else {
+					++prime_impl_prod_count[*prime_it];
+				}
+		}
+	}
+
+	std::vector<int> removed_prime_impl;
+	for (int i = 0; i != prod_term_.size(); ++i) {
+		for (prime_it = prod_term_[i].prime_impl_.begin();
+			prime_it != prod_term_[i].prime_impl_.end();
+			++prime_it) {
+				if (prime_impl_prod_count.find(*prime_it) != prime_impl_prod_count.end()) {
+					if (prime_impl_prod_count[*prime_it] == 1) {
+						std::set<int>::iterator prime_it1;
+						final_prod_term_.push_back(prod_term_[i]);
+						for (prime_it1 = prod_term_[i].prime_impl_.begin();
+							prime_it1 != prod_term_[i].prime_impl_.end();
+							++prime_it1) {
+								removed_prime_impl.push_back(*prime_it1);
+						}
+						prod_term_.erase(prod_term_.begin() + i);
+						--i;
+						break;
+					}
+				}
+		}
+	}
+
+	if (prod_term_.size() == 0) {
+		return;
+	}
+
+	for (int i = 0; i != prod_term_.size(); ++i) {
+		for (int j = 0; j != removed_prime_impl.size(); ++j) {
+			prod_term_[i].prime_impl_.erase(removed_prime_impl[j]);
+		}
+	}
+
+	// Find minimum set of rows that cover the remaining columns
+	std::set<int> remain_col;
+	for (int i = 0; i != prod_term_.size(); ++i) {
+		for (prime_it = prod_term_[i].prime_impl_.begin();
+			prime_it != prod_term_[i].prime_impl_.end();
+			++prime_it) {
+				remain_col.insert(*prime_it);
+		}
+	}
+
+	// in this direction i have the fewest terms in the product?
+	// i think so <= has to be used
+	int min_cover = 100;
+	int cover;
+	for (int i = 0; i != (1 << prod_term_.size()); ++i) {
+		// current coverage
+		std::set<int> cur_cover;
+		for (int j = 0; j != prod_term_.size(); ++j) {
+			if ((i & (1 << j)) != 0) {
+				for (prime_it = prod_term_[j].prime_impl_.begin();
+					prime_it != prod_term_[j].prime_impl_.end();
+					++prime_it) {
+						cur_cover.insert(*prime_it);
+				}
+			}
+		}
+		if (cur_cover.size() == remain_col.size()) {
+			std::set<int>::iterator prime_it1 = remain_col.begin();
+			prime_it = cur_cover.begin();
+			bool same = true;
+			while (prime_it != cur_cover.end()) {
+				if (*prime_it != *prime_it1) {
+					same = false;
+				}
+				++prime_it;
+				++prime_it1;
+			}
+			if (same) {
+				if (OneBitCount(i) <= min_cover) {
+					min_cover = OneBitCount(i);
+					cover = i;
+				}
+			}
+		}
+	}
+
+	for (int i = 0; i != prod_term_.size(); ++i) {
+		if ((cover & (1 << i)) != 0) {
+			final_prod_term_.push_back(prod_term_[i]);
+		}
+	}
+	
 }
 
 void SimplifyBoolExpr::RemoveUsed() {
@@ -378,4 +484,15 @@ bool SimplifyBoolExpr::CheckProdTermDuplicate(const BoolProdTerm &new_term) {
 	}	
 	return true;
 }
+
+int OneBitCount(int n) {
+	int bit_count = 0;
+	for (int i = 0; i != 8 * sizeof(n); ++i) {
+		if (((1 << i) & n) != 0) {
+			++bit_count;
+		}
+	}
+	return bit_count;
+}
+
 
