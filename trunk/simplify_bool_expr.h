@@ -44,6 +44,7 @@ public:
 	static bool Same(BoolProdTerm const &p1, BoolProdTerm const &p2);
 
 	int OneCount();
+	std::string ExprStr(std::map<std::string, bool> &expr_var);
 
 private:
 	// variables
@@ -57,6 +58,8 @@ private:
 
 	// prime implicants this one contains
 	std::set<int> prime_impl_;
+
+
 };
 
 class SimplifyBoolExpr {
@@ -79,6 +82,8 @@ private:
 
 	// remove used variables
 	void RemoveUsed();
+
+	void WriteOutput(std::string &output);
 
 	bool CheckProdTermDuplicate(BoolProdTerm const &new_term);
 
