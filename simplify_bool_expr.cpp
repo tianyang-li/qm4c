@@ -34,8 +34,6 @@ bool SimplifyBoolExpr::MakeSimple(std::string const &input, std::string &output)
 
 	CreatTruthTable();
 
-	// TODO: processing
-
 	QM();
 
 	return true;
@@ -254,7 +252,6 @@ void SimplifyBoolExpr::CreatTruthTable() {
 void SimplifyBoolExpr::CleanUp() {
 	expr_var_.clear();
 	var_table_.clear();
-	cover_table_.clear();
 }
 
 void SimplifyBoolExpr::QM() {
@@ -278,6 +275,10 @@ void SimplifyBoolExpr::QM() {
 
 	// remove unused
 	RemoveUsed();
+
+	// Eliminate all columns covered by essential primes
+	// Find minimum set of rows that cover the remaining columns
+
 }
 
 void SimplifyBoolExpr::RemoveUsed() {
@@ -289,8 +290,9 @@ void SimplifyBoolExpr::RemoveUsed() {
 					var_table_[i][j].erase(var_table_[i][j].begin() + index);
 				}
 				else {
-					// TODO modify this
-					cover_table_.insert(var_table_[i][j][index].
+					if (!CheckProdTermDuplicate(var_table_[i][j][index])) {
+						prod_term_.push_back(var_table_[i][j][index]);
+					}
 					++index;
 				}
 			}
@@ -348,5 +350,32 @@ int BoolProdTerm::OneCount() {
 
 BoolProdTerm::BoolProdTerm()
 : used_(false) {
+}
+
+bool BoolProdTerm::Same(BoolProdTerm const &p1, BoolProdTerm const &p2) {
+	int diff = 0;
+	for (int i = 0; i != 8 * sizeof(int); ++i) {
+		if (p1.removed_var_.find(i) == p1.removed_var_.end()
+			&& p2.removed_var_.find(i) == p2.removed_var_.end()) {
+				if ((p1.var_ & (1 << i)) != (p2.var_ & (1 << i))) {
+					++diff;
+				}
+		}
+		else {
+			if (!((p1.removed_var_.find(i) != p1.removed_var_.end()) && (p2.removed_var_.find(i) == p2.removed_var_.end()))) {
+				++diff;
+			}
+		}
+	}
+	return !diff;
+}
+
+bool SimplifyBoolExpr::CheckProdTermDuplicate(const BoolProdTerm &new_term) {
+	for (int i = 0; i != prod_term_.size(); ++i) {
+		if (BoolProdTerm::Same(prod_term_[i], prod_term_[i])) {
+			return false;
+		}
+	}	
+	return true;
 }
 
