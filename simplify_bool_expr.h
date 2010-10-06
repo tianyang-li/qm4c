@@ -26,8 +26,29 @@
 #include <vector>
 #include <cctype>
 #include <utility>
+#include <set>
+#include <list>
 
 #include "eval_bool_expr.h"
+
+class SimplifyBoolExpr;
+
+class BoolProdTerm {
+	friend class SimplifyBoolExpr;
+
+public:
+	static bool OkToCombine(BoolProdTerm const &p1, BoolProdTerm const &p2,
+		BoolProdTerm &result);
+
+	unsigned int OneCount();
+
+private:
+	// variables
+	unsigned int var_;
+
+	// which variables are not in use
+	std::set<unsigned int> removed_var_;
+};
 
 class SimplifyBoolExpr {
 public:
@@ -41,6 +62,8 @@ private:
 	void CreatTruthTable();
 
 	void CleanUp();
+
+	void QM();
 
 	// checks to see if a char is an alphabet or _
 	inline bool IsNonNumOK(char c);
@@ -65,8 +88,9 @@ private:
 
 	EvalBoolExpr eval;
 
-	std::map<unsigned int, bool> truth_table_;
-
+	// variable table
+	// index in the vector indicates how many 1's are in the term
+	std::list< std::vector< std::vector<BoolProdTerm> > > var_table_;
 };
 
 inline bool SimplifyBoolExpr::IsNonNumOK(char c) {

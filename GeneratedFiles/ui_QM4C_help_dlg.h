@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'QM4C_help_dlg.ui'
 **
-** Created: Wed Oct 6 05:12:18 2010
+** Created: Wed Oct 6 05:22:42 2010
 **      by: Qt User Interface Compiler version 4.6.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
