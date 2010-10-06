@@ -36,6 +36,8 @@ bool SimplifyBoolExpr::MakeSimple(std::string const &input, std::string &output)
 
 	QM();
 
+	WriteOutput(output);
+
 	return true;
 }
 
@@ -495,4 +497,39 @@ int OneBitCount(int n) {
 	return bit_count;
 }
 
+void SimplifyBoolExpr::WriteOutput(std::string &output) {
+	if (!final_prod_term_.size()) {
+		output = "0";
+		return;
+	}
+	output = final_prod_term_[0].ExprStr(expr_var_);
+	for (int i = 1; i < final_prod_term_.size(); ++i) {
+		output += ("+" + final_prod_term_[i].ExprStr(expr_var_));
+	}
+}
+
+std::string BoolProdTerm::ExprStr(std::map<std::string,bool> &expr_var) {
+	if (removed_var_.size() == expr_var.size() - 2) {
+		return "1";
+	}
+	std::string expr;
+	std::map<std::string,bool>::iterator var_it;
+	int index = 0;
+	for (var_it = expr_var.begin(); var_it != expr_var.end(); ++var_it) {
+		if (var_it->first != "1" && var_it->first != "0") {
+			if (removed_var_.find(index) == removed_var_.end()) {
+				if (index) {
+					expr += "&&";
+				}
+				if ((var_ & (1 << index)) != 0) {
+					expr += ("!" + var_it->first);
+				}
+				else {
+					expr += var_it->first;
+				}
+			}
+			++index;
+		}
+	}
+}
 
