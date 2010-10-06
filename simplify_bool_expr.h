@@ -51,6 +51,9 @@ private:
 
 	// if this has been used in each step
 	bool used_;
+
+	// prime implicants this one contains
+	std::set<int> prime_impl_;
 };
 
 class SimplifyBoolExpr {
@@ -67,6 +70,9 @@ private:
 	void CleanUp();
 
 	void QM();
+
+	// remove used variables
+	void RemoveUsed();
 
 	// checks to see if a char is an alphabet or _
 	inline bool IsNonNumOK(char c);
