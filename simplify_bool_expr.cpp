@@ -254,6 +254,7 @@ void SimplifyBoolExpr::CreatTruthTable() {
 void SimplifyBoolExpr::CleanUp() {
 	expr_var_.clear();
 	var_table_.clear();
+	cover_table_.clear();
 }
 
 void SimplifyBoolExpr::QM() {
@@ -288,6 +289,8 @@ void SimplifyBoolExpr::RemoveUsed() {
 					var_table_[i][j].erase(var_table_[i][j].begin() + index);
 				}
 				else {
+					// TODO modify this
+					cover_table_.insert(var_table_[i][j][index].
 					++index;
 				}
 			}

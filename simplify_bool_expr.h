@@ -100,6 +100,12 @@ private:
 	// variable table
 	// index in the vector indicates how many 1's are in the term
 	std::vector< std::vector< std::vector<BoolProdTerm> > > var_table_;
+
+	// TODO modify this
+	// coverage table
+	// in map
+	// the first is prime implicant
+	std::map<int, std::vector<BoolProdTerm> > cover_table_;
 };
 
 inline bool SimplifyBoolExpr::IsNonNumOK(char c) {
