@@ -66,7 +66,7 @@ void QM4C::SimplifyExpr() {
 	input_expr_ = (ui.boolExprInput->toPlainText()).toStdString();
 
 	// remove returns
-	unsigned int ret_loc = input_expr_.find('\n');
+	int ret_loc = input_expr_.find('\n');
 	if (ret_loc != std::string::npos) {
 		input_expr_.erase(ret_loc);
 	}

@@ -45,9 +45,9 @@ public:
 
 private:
 	// location of expr in the str
-	std::pair<unsigned int, unsigned int> expr_loc_;
+	std::pair<int, int> expr_loc_;
 	NodeType op_;
-	unsigned int left_, right_;
+	int left_, right_;
 
 };
 
@@ -63,7 +63,7 @@ public:
 	// if this is the 1st level of recursion
 	// find a pointer and fill in the space
 	// side: false - left; true - right
-	bool InitBuildEvalStruct(unsigned int expr_begin, unsigned int expr_end, bool side,
+	bool InitBuildEvalStruct(int expr_begin, int expr_end, bool side,
 		ExprNode &par);
 
 	bool EvalResult(std::map<std::string, bool> const &var_val);

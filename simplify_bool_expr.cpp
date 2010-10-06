@@ -36,7 +36,7 @@ bool SimplifyBoolExpr::MakeSimple(std::string const &input, std::string &output)
 
 	// TODO: processing
 
-	void QM();
+	QM();
 
 	return true;
 }
@@ -47,7 +47,7 @@ bool SimplifyBoolExpr::InitCheckInput(const std::string &input) {
 	expr_var_["0"] = false;
 
 	// for input_str_
-	unsigned int input_pos = 0;
+	int input_pos = 0;
 	
 	// indicates if i in the for loop (copying input into input_str_
 	// makes input[i] in a variable name string
@@ -56,9 +56,9 @@ bool SimplifyBoolExpr::InitCheckInput(const std::string &input) {
 	// stores the beginning and end of each variable name string
 	// in input_str_
 	// for each variable (beginning, end) indicates postions in input_str_
-	std::vector< std::pair<unsigned int, unsigned int> > var_pos_;
+	std::vector< std::pair<int, int> > var_pos_;
 
-	for (unsigned int i = 0; i != input.length(); ++i) {
+	for (int i = 0; i != input.length(); ++i) {
 		if (input[i] != ' ') {
 
 			input_str_.push_back(input[i]);
@@ -103,7 +103,7 @@ bool SimplifyBoolExpr::InitCheckInput(const std::string &input) {
 						if (i == input.length() - 1) {
 							in_var = false;
 						}
-						var_pos_.push_back(std::make_pair<unsigned int, unsigned int>(input_pos - 1, input.length()));
+						var_pos_.push_back(std::make_pair<int, int>(input_pos - 1, input.length()));
 						if (!in_var) {
 							var_pos_.back().second = input_pos - 1;
 						}
@@ -134,9 +134,9 @@ bool SimplifyBoolExpr::InitCheckInput(const std::string &input) {
 	// XXX: only checked for illegal characters, grammar check needed
 
 	// stores where non-0 constants are, replace them with 1 later
-	std::vector< std::pair<unsigned int, unsigned int> > pos_1;
+	std::vector< std::pair<int, int> > pos_1;
 
-	for (unsigned int i = 0; i != var_pos_.size(); ++i) {
+	for (int i = 0; i != var_pos_.size(); ++i) {
 
 		switch (CheckVar(input_str_.substr(var_pos_[i].first, var_pos_[i].second - var_pos_[i].first + 1))) {
 			case BOOL_0_:
@@ -158,7 +158,7 @@ bool SimplifyBoolExpr::InitCheckInput(const std::string &input) {
 	// non-0 constants replaced with 1 
 	// go backward so when positions in behind get changed, ones in front
 	// won't get changed
-	for (unsigned int i = 0; i != pos_1.size(); ++i) {
+	for (int i = 0; i != pos_1.size(); ++i) {
 		input_str_.replace(pos_1[pos_1.size() - 1 - i].first, 
 			pos_1[pos_1.size() - 1 - i].second - pos_1[pos_1.size() - 1 - i].first + 1, "1");
 	}
@@ -186,7 +186,7 @@ SimplifyBoolExpr::VarType SimplifyBoolExpr::CheckVar(const std::string &var) {
 
 	// non-0 numerical constant
 	if (std::isdigit(var[0])) {
-		for (unsigned int i = 1; i < var.length(); ++i) {
+		for (int i = 1; i < var.length(); ++i) {
 			if (!std::isdigit(var[i])) {
 				return BOOL_ERROR_;
 			}
@@ -195,7 +195,7 @@ SimplifyBoolExpr::VarType SimplifyBoolExpr::CheckVar(const std::string &var) {
 	}
 
 	// a variable
-	for (unsigned int i = 0; i != var.length(); ++i) {
+	for (int i = 0; i != var.length(); ++i) {
 		if (!IsCharOK(var[i])) {
 			return BOOL_ERROR_;
 		}
@@ -207,7 +207,7 @@ bool SimplifyBoolExpr::ParCheck() {
 	// it's like a stack for parentheses
 	// use signed version to prevent unnecessary errors
 	int par_stack = 0;
-	for (unsigned int i = 0; i != input_str_.length(); ++i) {
+	for (int i = 0; i != input_str_.length(); ++i) {
 		switch (input_str_[i]) {
 			case '(':
 				++par_stack;
@@ -223,14 +223,16 @@ bool SimplifyBoolExpr::ParCheck() {
 }
 
 void SimplifyBoolExpr::CreatTruthTable() {
-	// get as much as i need XXX: maybe don't don this in the future
+	// get as much as i need XXX: maybe don't do this in the future
 	var_table_.resize(expr_var_.size() - 2);
-	var_table_.front().resize(expr_var_.size() - 2);
+	for (int i = 0; i != expr_var_.size() - 2; ++i) {
+		var_table_[i].resize(expr_var_.size() - 2 - i);
+	}
 
-	unsigned int range = 1 << (expr_var_.size() - 2);
-	unsigned int var_index;
+	int range = 1 << (expr_var_.size() - 2);
+	int var_index;
 	std::map<std::string, bool>::iterator var_it;
-	for (unsigned int i = 0; i != range; ++i) {
+	for (int i = 0; i != range; ++i) {
 		var_index = 0;
 		for (var_it = expr_var_.begin(); var_it != expr_var_.end(); ++var_it) {
 			if (var_it->first != "0"
@@ -243,7 +245,7 @@ void SimplifyBoolExpr::CreatTruthTable() {
 		if (eval.EvalResult(expr_var_)) {
 			BoolProdTerm temp_prod;
 			temp_prod.var_ = i;
-			var_table_.front()[temp_prod.OneCount()].push_back(temp_prod);
+			var_table_[0][temp_prod.OneCount()].push_back(temp_prod);
 		}
 	}
 }
@@ -254,21 +256,34 @@ void SimplifyBoolExpr::CleanUp() {
 }
 
 void SimplifyBoolExpr::QM() {
+	// initialization already done in
+	// CreatTruthTable()
 	// core of QM implementation
-	for (int i = 0; i < expr_var_.size(); ++i) {
-		for (int j = 0; j < expr_var_.size() - i -1; ++j)
+	for (int i = 1; i < expr_var_.size() - 2; ++i) {
+		for (int j = 0; j < expr_var_.size() - 2 - i; ++j) {
+			// two iterators
+			int it1, it2;
+			for (it1 = 0; it1 < var_table_[i - 1][j].size(); ++it1) {
+				for (it2 = 0; it2 < var_table_[i - 1][j + 1].size(); ++it2) {
+					BoolProdTerm temp_prod;
+					if (BoolProdTerm::OkToCombine(var_table_[i - 1][j][it1], var_table_[i - 1][j + 1][it2], temp_prod)) {
+						var_table_[i][temp_prod.OneCount()].push_back(temp_prod);
+					}
+				}
+			}
+		}
 	}
 }
 
-bool BoolProdTerm::OkToCombine(const BoolProdTerm &p1, 
-							   const BoolProdTerm &p2, 
+bool BoolProdTerm::OkToCombine(BoolProdTerm &p1, 
+							   BoolProdTerm &p2, 
 							   BoolProdTerm &result) {
 	// boolean OR
-	unsigned int diff_count = 0;
+	int diff_count = 0;
 
-	unsigned int diff_loc;
+	int diff_loc;
 
-	for (unsigned int i = 0; i != 8 * sizeof(unsigned int); ++i) {
+	for (int i = 0; i != 8 * sizeof(int); ++i) {
 		if ((p1.var_ & (1 << i)) != (p2.var_ & (1 << i))) {
 			if (p1.removed_var_.find(i) == p1.removed_var_.end()
 				&& p2.removed_var_.find(i) == p2.removed_var_.end()) {
@@ -284,18 +299,24 @@ bool BoolProdTerm::OkToCombine(const BoolProdTerm &p1,
 	result.removed_var_ = p1.removed_var_;
 	if (diff_count == 1) {
 		result.removed_var_.insert(diff_loc);
+		p1.used_ = true;
+		p2.used_ = true;
 	}
 
 	return true;
 }
 
-unsigned int BoolProdTerm::OneCount() {
-	unsigned int one_count = 0;
-	for (unsigned int i = 0; i != 8 * sizeof(var_); ++i) {
+int BoolProdTerm::OneCount() {
+	int one_count = 0;
+	for (int i = 0; i != 8 * sizeof(var_); ++i) {
 		if ((var_ & (1 << i)) != 0) {
 			++one_count;
 		}
 	}
 	return one_count;
+}
+
+BoolProdTerm::BoolProdTerm()
+: used_(false) {
 }
 

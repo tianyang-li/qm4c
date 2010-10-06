@@ -27,7 +27,6 @@
 #include <cctype>
 #include <utility>
 #include <set>
-#include <list>
 
 #include "eval_bool_expr.h"
 
@@ -37,17 +36,21 @@ class BoolProdTerm {
 	friend class SimplifyBoolExpr;
 
 public:
-	static bool OkToCombine(BoolProdTerm const &p1, BoolProdTerm const &p2,
+	BoolProdTerm();
+	static bool OkToCombine(BoolProdTerm &p1, BoolProdTerm &p2,
 		BoolProdTerm &result);
 
-	unsigned int OneCount();
+	int OneCount();
 
 private:
 	// variables
-	unsigned int var_;
+	int var_;
 
 	// which variables are not in use
-	std::set<unsigned int> removed_var_;
+	std::set<int> removed_var_;
+
+	// if this has been used in each step
+	bool used_;
 };
 
 class SimplifyBoolExpr {
@@ -90,7 +93,7 @@ private:
 
 	// variable table
 	// index in the vector indicates how many 1's are in the term
-	std::list< std::vector< std::vector<BoolProdTerm> > > var_table_;
+	std::vector< std::vector< std::vector<BoolProdTerm> > > var_table_;
 };
 
 inline bool SimplifyBoolExpr::IsNonNumOK(char c) {
