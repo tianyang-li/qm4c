@@ -429,12 +429,17 @@ bool BoolProdTerm::OkToCombine(BoolProdTerm &p1,
 	if (diff_count > 1) return false;
 
 	result.var_ = p1.var_;
-	result.removed_var_ = p1.removed_var_;
+	std::set<int>::iterator union_it;
+	for (union_it = p1.removed_var_.begin(); union_it != p1.removed_var_.end(); ++union_it) {
+		result.removed_var_.insert(*union_it);
+	}
+	for (union_it = p2.removed_var_.begin(); union_it != p2.removed_var_.end(); ++union_it) {
+		result.removed_var_.insert(*union_it);
+	}
 	if (diff_count == 1) {
 		result.removed_var_.insert(diff_loc);
 		p1.used_ = true;
 		p2.used_ = true;
-		std::set<int>::iterator union_it;
 		for (union_it = p1.prime_impl_.begin(); union_it != p1.prime_impl_.end(); ++union_it) {
 			result.prime_impl_.insert(*union_it);
 		}
@@ -449,8 +454,10 @@ bool BoolProdTerm::OkToCombine(BoolProdTerm &p1,
 int BoolProdTerm::OneCount() {
 	int one_count = 0;
 	for (int i = 0; i != 8 * sizeof(var_); ++i) {
-		if ((var_ & (1 << i)) != 0) {
-			++one_count;
+		if (removed_var_.find(i) == removed_var_.end()) {
+			if ((var_ & (1 << i)) != 0) {
+				++one_count;
+			}
 		}
 	}
 	return one_count;
@@ -470,7 +477,7 @@ bool BoolProdTerm::Same(BoolProdTerm const &p1, BoolProdTerm const &p2) {
 				}
 		}
 		else {
-			if (!((p1.removed_var_.find(i) != p1.removed_var_.end()) && (p2.removed_var_.find(i) == p2.removed_var_.end()))) {
+			if (!((p1.removed_var_.find(i) != p1.removed_var_.end()) && (p2.removed_var_.find(i) != p2.removed_var_.end()))) {
 				++diff;
 			}
 		}
@@ -480,11 +487,11 @@ bool BoolProdTerm::Same(BoolProdTerm const &p1, BoolProdTerm const &p2) {
 
 bool SimplifyBoolExpr::CheckProdTermDuplicate(const BoolProdTerm &new_term) {
 	for (int i = 0; i != prod_term_.size(); ++i) {
-		if (BoolProdTerm::Same(prod_term_[i], prod_term_[i])) {
-			return false;
+		if (BoolProdTerm::Same(new_term, prod_term_[i])) {
+			return true;
 		}
 	}	
-	return true;
+	return false;
 }
 
 int OneBitCount(int n) {
@@ -504,7 +511,7 @@ void SimplifyBoolExpr::WriteOutput(std::string &output) {
 	}
 	output = final_prod_term_[0].ExprStr(expr_var_);
 	for (int i = 1; i < final_prod_term_.size(); ++i) {
-		output += ("+" + final_prod_term_[i].ExprStr(expr_var_));
+		output += (" || " + final_prod_term_[i].ExprStr(expr_var_));
 	}
 }
 
@@ -515,21 +522,27 @@ std::string BoolProdTerm::ExprStr(std::map<std::string,bool> &expr_var) {
 	std::string expr;
 	std::map<std::string,bool>::iterator var_it;
 	int index = 0;
+	// indicates first variable, so && won't be printed incorrectly
+	bool first = true;
 	for (var_it = expr_var.begin(); var_it != expr_var.end(); ++var_it) {
 		if (var_it->first != "1" && var_it->first != "0") {
 			if (removed_var_.find(index) == removed_var_.end()) {
-				if (index) {
-					expr += "&&";
-				}
-				if ((var_ & (1 << index)) != 0) {
-					expr += ("!" + var_it->first);
+				if (!first) {
+					expr += " && ";
 				}
 				else {
+					first = false;
+				}
+				if ((var_ & (1 << index)) != 0) {
 					expr += var_it->first;
+				}
+				else {
+					expr += ("!" + var_it->first);
 				}
 			}
 			++index;
 		}
 	}
+	return expr;
 }
 
