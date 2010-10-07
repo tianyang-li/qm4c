@@ -85,6 +85,7 @@ private:
 
 	void WriteOutput(std::string &output);
 
+	// returns true if duplicate is found
 	bool CheckProdTermDuplicate(BoolProdTerm const &new_term);
 
 	// checks to see if a char is an alphabet or _

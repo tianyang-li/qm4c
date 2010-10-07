@@ -74,9 +74,7 @@ void QM4C::SimplifyExpr() {
 	Ui::PleaseWaitDlg please_wait_dlg_ui;
 	QDialog please_wait;
 	please_wait_dlg_ui.setupUi(&please_wait);
-	please_wait.show();
-
-	please_wait.close();
+	please_wait.show();	
 
 	SimplifyBoolExpr simplify_input;
 	if (!simplify_input.MakeSimple(input_expr_, output_expr_)) {
@@ -87,6 +85,8 @@ void QM4C::SimplifyExpr() {
 		error_dlg.exec();
 		return;
 	}
+
+	please_wait.close();
 
 	ui.boolExprOutput->setPlainText(QString::fromStdString(output_expr_));
 
