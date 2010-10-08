@@ -416,19 +416,18 @@ bool BoolProdTerm::OkToCombine(BoolProdTerm &p1,
 
 	int diff_loc;
 
-	for (int i = 0; i != 8 * sizeof(int); ++i) {
-		if ((p1.var_ & (1 << i)) != (p2.var_ & (1 << i))) {
-			if (p1.removed_var_.find(i) == p1.removed_var_.end()
-				&& p2.removed_var_.find(i) == p2.removed_var_.end()) {
+	for (int i = 0; i != 8 *sizeof(int); ++i) {
+		if (p1.removed_var_.find(i) == p1.removed_var_.end()
+			&& p2.removed_var_.find(i) == p2.removed_var_.end()) {
+				if ((p1.var_ & (1 << i)) != (p2.var_ & (1 << i))) {
 					++diff_count;
 					diff_loc = i;
-			}
-			else {
-				if (!((p1.removed_var_.find(i) != p1.removed_var_.end()
-					&& p2.removed_var_.find(i) != p2.removed_var_.end()))) {
-						++diff_count;
-						diff_loc = i;
 				}
+		}
+		else {
+			if (!((p1.removed_var_.find(i) != p1.removed_var_.end()) && p2.removed_var_.find(i) != p2.removed_var_.end())) {
+				++diff_count;
+				diff_loc = i;
 			}
 		}
 	}
