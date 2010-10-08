@@ -226,7 +226,7 @@ void SimplifyBoolExpr::CreatTruthTable() {
 	// get as much as i need XXX: maybe don't do this in the future
 	var_table_.resize(expr_var_.size() - 1);
 	for (int i = 0; i <= expr_var_.size() - 2; ++i) {
-		var_table_[i].resize(1 << (expr_var_.size() - 2 - i));
+		var_table_[i].resize(expr_var_.size() - 1 - i);
 	}
 
 	int range = 1 << (expr_var_.size() - 2);
@@ -263,7 +263,7 @@ void SimplifyBoolExpr::QM() {
 	// CreatTruthTable()
 	// core of QM implementation
 	for (int i = 1; i <= expr_var_.size() - 2; ++i) {
-		for (int j = 0; j < (1 << (expr_var_.size() - 2 - i)); ++j) {
+		for (int j = 0; j <= (expr_var_.size() - 2 - i); ++j) {
 			// two iterators
 			int it1, it2;
 			for (it1 = 0; it1 < var_table_[i - 1][j].size(); ++it1) {
@@ -391,7 +391,7 @@ void SimplifyBoolExpr::CoverageTable() {
 
 void SimplifyBoolExpr::RemoveUsed() {
 	for (int i = 0; i <= expr_var_.size() - 2; ++i) {
-		for (int j = 0; j < (1 << (expr_var_.size() - 2 - i)); ++j) {
+		for (int j = 0; j <= (expr_var_.size() - 2 - i); ++j) {
 			int index = 0;
 			while (var_table_[i][j].begin() + index != var_table_[i][j].end()) {
 				if (var_table_[i][j][index].used_) {
@@ -422,6 +422,13 @@ bool BoolProdTerm::OkToCombine(BoolProdTerm &p1,
 				&& p2.removed_var_.find(i) == p2.removed_var_.end()) {
 					++diff_count;
 					diff_loc = i;
+			}
+			else {
+				if (!((p1.removed_var_.find(i) != p1.removed_var_.end()
+					&& p2.removed_var_.find(i) != p2.removed_var_.end()))) {
+						++diff_count;
+						diff_loc = i;
+				}
 			}
 		}
 	}
