@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'qm4c.ui'
 **
-** Created: Sun Oct 10 11:01:39 2010
+** Created: Sun Oct 10 17:00:51 2010
 **      by: Qt User Interface Compiler version 4.6.3
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
