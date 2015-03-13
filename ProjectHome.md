@@ -1,0 +1,1 @@
+Implementation of Quine–McCluskey algorithm for C like boolean expressions. Developed using Qt4
